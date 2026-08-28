@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>信用风险模型监控平台</title>
+<style>
+:root{
+  --bg:#f5f7fa;--card:#fff;--line:#e5eaf1;--txt:#2b3445;--sub:#7a8699;
+  --blue:#2f6bff;--green:#16a085;--orange:#e67e22;--red:#d8392b;--gray:#8a94a6;--purple:#8e44ad;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+  font-family:"Microsoft YaHei",SimSun,system-ui,sans-serif;
+  background:var(--bg);color:var(--txt);line-height:1.6;
+}
+.header{
+  background:linear-gradient(135deg,#1f3a6b,#2f6bff);color:#fff;
+  padding:18px 28px;display:flex;align-items:center;justify-content:space-between;
+  box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+.header h1{font-size:20px;font-weight:600;}
+.header .sub{font-size:13px;opacity:.85;}
+.tabs{
+  background:var(--card);border-bottom:1px solid var(--line);
+  display:flex;padding:0 28px;gap:4px;
+}
+.tab{
+  padding:14px 20px;cursor:pointer;font-size:14px;color:var(--sub);
+  border-bottom:2px solid transparent;transition:all .2s;
+}
+.tab:hover{color:var(--blue);}
+.tab.active{color:var(--blue);border-bottom-color:var(--blue);font-weight:600;}
+.panel{display:none;padding:24px 28px;}
+.panel.active{display:block;}
+
+/* stat cards */
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-bottom:24px;}
+.stat-card{
+  background:var(--card);border-radius:10px;padding:18px 20px;
+  border:1px solid var(--line);position:relative;overflow:hidden;
+}
+.stat-card .label{font-size:13px;color:var(--sub);}
+.stat-card .num{font-size:30px;font-weight:700;margin-top:6px;}
+.stat-card .bar{position:absolute;left:0;top:0;bottom:0;width:4px;}
+.stat-card.c1 .bar{background:var(--green);}
+.stat-card.c2 .bar{background:var(--orange);}
+.stat-card.c3 .bar{background:var(--purple);}
+.stat-card.c4 .bar{background:var(--blue);}
+.stat-card.c5 .bar{background:var(--gray);}
+
+/* gray release flow */
+.flow{
+  background:var(--card);border:1px solid var(--line);border-radius:10px;
+  padding:20px;margin-bottom:24px;
+}
+.flow h3{font-size:15px;margin-bottom:14px;color:var(--txt);}
+.flow-steps{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.flow-step{
+  flex:1;text-align:center;padding:14px 8px;border-radius:8px;
+  background:#f0f4ff;border:1px solid #dbe6ff;font-size:13px;
+}
+.flow-step .pct{font-size:18px;font-weight:700;color:var(--blue);display:block;}
+.flow-step .lbl{font-size:12px;color:var(--sub);margin-top:2px;}
+.flow-arrow{color:var(--gray);font-size:18px;}
+
+/* table */
+.table-wrap{
+  background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden;
+}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+thead{background:#f7f9fc;}
+th,td{padding:11px 14px;text-align:left;border-bottom:1px solid var(--line);}
+th{font-weight:600;color:var(--sub);font-size:12px;}
+tbody tr:hover{background:#fafbfd;}
+.tag{
+  display:inline-block;padding:2px 10px;border-radius:10px;
+  font-size:12px;font-weight:600;
+}
+.tag.online{background:#e6f7f1;color:var(--green);}
+.tag.gray{background:#fff3e6;color:var(--orange);}
+.tag.shadow{background:#f3e8ff;color:var(--purple);}
+.tag.candidate{background:#e8f0ff;color:var(--blue);}
+.tag.archive{background:#eef0f3;color:var(--gray);}
+.tag.ks-ok{background:#e6f7f1;color:var(--green);}
+.tag.ks-warn{background:#fff3e6;color:var(--orange);}
+.tag.ks-bad{background:#fdecea;color:var(--red);}
+
+/* rootcause */
+.scenario-group{margin-bottom:24px;}
+.scenario-title{
+  font-size:15px;font-weight:600;color:var(--txt);
+  padding:10px 14px;background:var(--card);border-left:4px solid var(--blue);
+  border-radius:6px;margin-bottom:12px;
+}
+.rc-card{
+  background:var(--card);border:1px solid var(--line);border-radius:10px;
+  padding:16px 18px;margin-bottom:12px;
+}
+.rc-card .rc-head{display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap;}
+.rc-card .round-badge{
+  background:var(--blue);color:#fff;padding:2px 10px;border-radius:10px;
+  font-size:12px;font-weight:600;
+}
+.rc-card .drift-type{font-size:13px;color:var(--sub);}
+.rc-card .desc{font-size:13px;color:var(--txt);margin-bottom:10px;}
+.rc-card .strategy{font-size:13px;margin-bottom:6px;}
+.rc-card .strategy b{color:var(--blue);}
+.rc-card .fallback{font-size:13px;margin-bottom:10px;}
+.rc-card .fallback b{color:var(--red);}
+.items-row{margin-bottom:10px;font-size:12px;}
+.items-row .it-label{color:var(--sub);font-weight:600;margin-right:6px;}
+.item-pill{
+  display:inline-block;padding:1px 8px;border-radius:8px;margin:2px 3px;
+  font-size:11px;background:#f0f4ff;color:var(--blue);
+}
+.item-pill.high{background:#fdecea;color:var(--red);}
+.item-pill.medium{background:#fff3e6;color:var(--orange);}
+.mini-table{width:100%;font-size:12px;margin-top:8px;}
+.mini-table th{background:#f7f9fc;font-size:11px;}
+.level-low{color:var(--green);font-weight:600;}
+.level-med{color:var(--orange);font-weight:600;}
+.level-high{color:var(--red);font-weight:600;}
+.ai-analysis{
+  margin-top:16px;border:1px solid #d8ccff;border-radius:10px;
+  background:linear-gradient(135deg,#fbfaff 0%,#f5f1ff 100%);padding:16px;
+}
+.ai-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;flex-wrap:wrap;}
+.ai-title{font-size:14px;font-weight:700;color:#4f2b91;}
+.ai-model{font-size:11px;color:#6941c6;background:#ebe4ff;padding:3px 9px;border-radius:10px;}
+.ai-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;}
+.ai-dim{background:#fff;border:1px solid #e6defa;border-radius:8px;padding:12px;min-width:0;}
+.ai-dim-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:7px;}
+.ai-dim-name{font-size:13px;font-weight:700;color:var(--txt);}
+.ai-conclusion{font-size:13px;line-height:1.65;color:var(--txt);margin-bottom:6px;}
+.ai-basis{font-size:12px;line-height:1.6;color:var(--sub);margin-bottom:6px;}
+.ai-evidence{font-size:11px;line-height:1.55;color:#6b5b95;word-break:break-word;}
+.ai-summary{margin-top:10px;background:#4f2b91;color:#fff;border-radius:8px;padding:12px 14px;font-size:13px;line-height:1.7;}
+.ai-summary-row+.ai-summary-row{margin-top:4px;}
+.ai-summary b{color:#fff;}
+.ai-recs{margin:10px 0 0;padding-left:20px;font-size:12px;line-height:1.7;color:var(--txt);}
+.ai-gaps{margin-top:8px;font-size:11px;color:var(--sub);}
+.ai-gaps summary{cursor:pointer;color:#6941c6;font-weight:600;}
+@media(max-width:760px){.ai-grid{grid-template-columns:1fr;}}
+
+/* deploy */
+.dp-card{
+  background:var(--card);border:1px solid var(--line);border-radius:10px;
+  padding:16px 18px;margin-bottom:12px;
+}
+.dp-card .dp-head{display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap;}
+.decision-badge{
+  padding:3px 12px;border-radius:12px;font-size:12px;font-weight:600;color:#fff;
+}
+.decision-badge.deploy{background:var(--green);}
+.decision-badge.rollback{background:var(--red);}
+.decision-badge.hold{background:var(--orange);}
+.decision-badge.none{background:var(--gray);}
+.dp-card .desc{font-size:13px;color:var(--sub);margin-bottom:10px;}
+.dp-card .final{font-size:13px;margin-bottom:10px;}
+.dp-card .final b{color:var(--blue);}
+.stages-table th{background:#f7f9fc;}
+
+/* demo */
+.demo-wrap{
+  background:var(--card);border:1px solid var(--line);border-radius:10px;padding:24px;
+}
+.demo-wrap h3{font-size:16px;margin-bottom:16px;}
+.slider-row{display:flex;align-items:center;gap:16px;margin-bottom:20px;}
+.slider-row input[type=range]{
+  flex:1;height:6px;-webkit-appearance:none;background:#e0e6ef;border-radius:3px;outline:none;
+}
+.slider-row input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;width:20px;height:20px;border-radius:50%;
+  background:var(--blue);cursor:pointer;border:3px solid #fff;box-shadow:0 0 0 1px var(--blue);
+}
+.slider-row .pct-val{font-size:20px;font-weight:700;color:var(--blue);min-width:70px;text-align:right;}
+.btn-row{display:flex;gap:10px;margin-bottom:20px;}
+.btn{
+  padding:9px 18px;border:none;border-radius:6px;cursor:pointer;
+  font-size:13px;font-weight:600;color:#fff;transition:opacity .2s;
+}
+.btn:hover{opacity:.88;}
+.btn.promote{background:var(--green);}
+.btn.rollback{background:var(--red);}
+.btn.reset{background:var(--gray);}
+.bars{display:flex;flex-direction:column;gap:14px;margin-bottom:20px;}
+.bar-item .bar-label{display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px;}
+.bar-item .bar-label .pct{font-weight:700;}
+.bar-track{height:24px;background:#eef0f3;border-radius:12px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:12px;transition:width .4s ease;display:flex;align-items:center;justify-content:flex-end;padding-right:10px;color:#fff;font-size:12px;font-weight:600;}
+.bar-fill.old{background:linear-gradient(90deg,#7a8699,#8a94a6);}
+.bar-fill.new{background:linear-gradient(90deg,#2f6bff,#4d80ff);}
+.log-area{
+  background:#1e2533;color:#d6dae3;border-radius:8px;padding:14px;
+  font-family:Consolas,Monaco,monospace;font-size:12px;
+  max-height:280px;overflow-y:auto;
+}
+.log-area .log-line{margin-bottom:3px;}
+.log-area .ts{color:#5e6b80;margin-right:8px;}
+.log-area .lv-info{color:#4d80ff;}
+.log-area .lv-ok{color:#3ec19a;}
+.log-area .lv-warn{color:#e6a23c;}
+.log-area .lv-err{color:#e8554e;}
+.layers{display:flex;gap:10px;margin-bottom:16px;}
+.layer-chip{
+  flex:1;text-align:center;padding:8px;border-radius:6px;font-size:12px;
+  background:#f0f4ff;border:1px solid #dbe6ff;color:var(--blue);
+}
+.layer-chip.active{background:var(--blue);color:#fff;}
+.empty{padding:40px;text-align:center;color:var(--sub);font-size:14px;}
+
+/* simplified reports / competition report */
+.section-block{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:20px;}
+.section-title{font-size:16px;font-weight:600;margin-bottom:14px;color:var(--txt);border-left:4px solid var(--blue);padding-left:10px;}
+.comp-text{font-size:14px;line-height:1.9;color:var(--txt);}
+.comp-text ul{margin:0;padding-left:22px;}
+.comp-text li{margin-bottom:6px;}
+.simple-card{
+  border:1px solid var(--line);border-radius:8px;padding:14px 16px;margin-bottom:12px;
+  background:#fafbfd;font-size:13px;line-height:1.8;
+}
+.simple-card .sc-name{font-weight:700;color:var(--blue);margin-right:8px;}
+.simple-card .sc-round{color:var(--sub);font-size:12px;margin-right:10px;}
+.simple-card .sc-decision{display:inline-block;padding:1px 10px;border-radius:10px;font-size:12px;font-weight:600;margin-right:10px;}
+.simple-card .sc-decision.deploy{background:#e6f7f1;color:var(--green);}
+.simple-card .sc-decision.rollback{background:#fdecea;color:var(--red);}
+.simple-card .sc-decision.hold{background:#fff3e6;color:var(--orange);}
+.simple-card .sc-summary{color:var(--txt);}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <h1>信用风险模型监控平台</h1>
+    <div class="sub">Credit Risk Model Monitoring &amp; Gray Release Dashboard</div>
+  </div>
+  <div class="sub" id="genTime"></div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" data-tab="monitor">模型监控</div>
+  <div class="tab" data-tab="rootcause">根因分析报告</div>
+  <div class="tab" data-tab="deploy">部署上线报告</div>
+  <div class="tab" data-tab="competition">赛题交付报告</div>
+  <div class="tab" data-tab="demo">无感切换演示</div>
+</div>
+
+<!-- 模型监控 -->
+<div class="panel active" id="panel-monitor">
+  <div class="stats" id="stats"></div>
+  <div class="flow">
+    <h3>灰度发布流程（4 步：L1 离线评估 → L2 影子 20% → L2 灰度 50% → 全量）</h3>
+    <div class="flow-steps">
+      <div class="flow-step"><span class="pct">L1</span><span class="lbl">离线评估</span></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step"><span class="pct">20%</span><span class="lbl">L2 影子运行</span></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step"><span class="pct">50%</span><span class="lbl">L2 灰度</span></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step"><span class="pct">100%</span><span class="lbl">全量上线</span></div>
+    </div>
+  </div>
+  <div class="table-wrap">
+    <table id="modelTable">
+      <thead><tr>
+        <th>模型</th><th>算法</th><th>场景</th><th>状态</th>
+        <th>KS</th><th>AUC</th><th>坏账率</th><th>灰度</th>
+      </tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- 根因分析 -->
+<div class="panel" id="panel-rootcause">
+  <div id="rootcauseContainer"></div>
+</div>
+
+<!-- 部署上线 -->
+<div class="panel" id="panel-deploy">
+  <div id="deployContainer"></div>
+</div>
+
+<!-- 赛题交付报告 -->
+<div class="panel" id="panel-competition">
+  <div class="section-block">
+    <h3 class="section-title">一、任务目标</h3>
+    <div id="compObjective" class="comp-text"></div>
+  </div>
+  <div class="section-block" style="margin-top:20px;">
+    <h3 class="section-title">二、技术指标对照</h3>
+    <div class="table-wrap"><table id="compMetrics">
+      <thead><tr><th>指标</th><th>目标值</th><th>实测值</th><th>达成</th></tr></thead>
+      <tbody></tbody>
+    </table></div>
+  </div>
+  <div class="section-block" style="margin-top:20px;">
+    <h3 class="section-title">三、场景迭代与上线</h3>
+    <div class="table-wrap"><table id="compScenarios">
+      <thead><tr><th>场景</th><th>定位</th><th>轮次</th><th>策略</th><th>决策</th><th>评审后现役</th></tr></thead>
+      <tbody></tbody>
+    </table></div>
+  </div>
+  <div class="section-block" style="margin-top:20px;">
+    <h3 class="section-title">四、成果交付</h3>
+    <div id="compDeliverables" class="comp-text"></div>
+  </div>
+</div>
+
+<!-- 无感切换演示 -->
+<div class="panel" id="panel-demo">
+  <div class="demo-wrap">
+    <h3>无感切换演示 · 灰度流量调控</h3>
+    <div class="layers" id="layerChips">
+      <div class="layer-chip active" data-layer="L1">L1 离线评估</div>
+      <div class="layer-chip" data-layer="L2-20">L2 影子 20%</div>
+      <div class="layer-chip" data-layer="L2-50">L2 灰度 50%</div>
+      <div class="layer-chip" data-layer="Full">全量 100%</div>
+    </div>
+    <div class="slider-row">
+      <span style="font-size:13px;color:var(--sub);">新模型流量</span>
+      <input type="range" id="trafficSlider" min="0" max="100" value="0" step="5">
+      <span class="pct-val" id="trafficPct">0%</span>
+    </div>
+    <div class="btn-row">
+      <button class="btn promote" id="btnPromote">晋升 / Promote</button>
+      <button class="btn rollback" id="btnRollback">回滚 / Rollback</button>
+      <button class="btn reset" id="btnReset">重置</button>
+    </div>
+    <div class="bars">
+      <div class="bar-item">
+        <div class="bar-label"><span>旧模型（基座）</span><span class="pct" id="oldPct">100%</span></div>
+        <div class="bar-track"><div class="bar-fill old" id="oldBar" style="width:100%">100%</div></div>
+      </div>
+      <div class="bar-item">
+        <div class="bar-label"><span>新模型（候选）</span><span class="pct" id="newPct">0%</span></div>
+        <div class="bar-track"><div class="bar-fill new" id="newBar" style="width:0%"></div></div>
+      </div>
+    </div>
+    <div class="log-area" id="logArea"></div>
+  </div>
+</div>
+
+<script src="dashboard_data.js"></script>
+<script>
+(function(){
+  var D = (typeof DATA !== 'undefined') ? DATA : {models:[],rootcause:[],deploy:[],scenarios:[]};
+  document.getElementById('genTime').textContent = new Date().toLocaleString('zh-CN');
+
+  /* ---------- Tab switching ---------- */
+  document.querySelectorAll('.tab').forEach(function(t){
+    t.addEventListener('click',function(){
+      document.querySelectorAll('.tab').forEach(function(x){x.classList.remove('active');});
+      document.querySelectorAll('.panel').forEach(function(x){x.classList.remove('active');});
+      t.classList.add('active');
+      document.getElementById('panel-'+t.dataset.tab).classList.add('active');
+    });
+  });
+
+  /* ---------- Stats cards ---------- */
+  function stateTag(s){
+    var map={online:'online',gray:'gray',shadow:'shadow',candidate:'candidate',archive:'archive'};
+    return map[s]||'archive';
+  }
+  function stateLabel(s){
+    var map={online:'在线服务',gray:'灰度中',shadow:'影子运行',candidate:'候选',archive:'归档/离线'};
+    return map[s]||s;
+  }
+  function renderStats(){
+    var ms=D.models||[];
+    var cnt={online:0,gray:0,shadow:0,candidate:0,archive:0};
+    ms.forEach(function(m){ if(cnt[m.state]!==undefined) cnt[m.state]++; });
+    var cards=[
+      {cls:'c1',label:'在线服务模型',val:cnt.online},
+      {cls:'c2',label:'灰度中模型',val:cnt.gray},
+      {cls:'c3',label:'影子运行',val:cnt.shadow},
+      {cls:'c4',label:'候选',val:cnt.candidate},
+      {cls:'c5',label:'归档/离线',val:cnt.archive}
+    ];
+    document.getElementById('stats').innerHTML=cards.map(function(c){
+      return '<div class="stat-card '+c.cls+'"><div class="bar"></div>'+
+        '<div class="label">'+c.label+'</div><div class="num">'+c.val+'</div></div>';
+    }).join('');
+  }
+
+  /* ---------- Model table ---------- */
+  function ksClass(v){
+    v=parseFloat(v); if(isNaN(v)) return '';
+    if(v>=0.30) return 'ks-ok';
+    if(v>=0.20) return 'ks-warn';
+    return 'ks-bad';
+  }
+  function esc(s){ return (s==null?'':String(s)); }
+  function renderTable(){
+    var ms=D.models||[];
+    var tb=document.querySelector('#modelTable tbody');
+    if(!ms.length){ tb.innerHTML='<tr><td colspan="8" class="empty">暂无模型数据</td></tr>'; return; }
+    tb.innerHTML=ms.map(function(m){
+      var ks=esc(m.ks), ksC=ksClass(m.ks);
+      return '<tr>'+
+        '<td><b>'+esc(m.name)+'</b></td>'+
+        '<td>'+esc(m.algo)+'</td>'+
+        '<td>'+esc(m.scenario)+'</td>'+
+        '<td><span class="tag '+stateTag(m.state)+'">'+stateLabel(m.state)+'</span></td>'+
+        '<td>'+(ksC?'<span class="tag '+ksC+'">'+ks+'</span>':ks)+'</td>'+
+        '<td>'+esc(m.auc)+'</td>'+
+        '<td>'+esc(m.bad_rate)+'</td>'+
+        '<td>'+esc(m.gray||'—')+'</td>'+
+      '</tr>';
+    }).join('');
+  }
+
+  /* ---------- Rootcause ---------- */
+  function levelClass(lv){
+    lv=String(lv||'').toUpperCase();
+    if(lv==='HIGH') return 'level-high';
+    if(lv==='MEDIUM') return 'level-med';
+    return 'level-low';
+  }
+  function renderRootcause(){
+    var rc=D.rootcause||[];
+    var ct=document.getElementById('rootcauseContainer');
+    if(!rc.length){ ct.innerHTML='<div class="empty">暂无根因分析数据</div>'; return; }
+    // group by scenario
+    var groups={};
+    rc.forEach(function(r){
+      var k=r.scenario||'未分类';
+      (groups[k]=groups[k]||[]).push(r);
+    });
+    var html='';
+    Object.keys(groups).forEach(function(sc){
+      html+='<div class="scenario-group"><div class="scenario-title">'+esc(sc)+'</div>';
+      groups[sc].forEach(function(r){
+        var hi=(r.high_items||[]).map(function(it){return '<span class="item-pill high">'+esc(it)+'</span>';}).join('');
+        var mi=(r.medium_items||[]).map(function(it){return '<span class="item-pill medium">'+esc(it)+'</span>';}).join('');
+        html+='<div class="rc-card">'+
+          '<div class="rc-head">'+
+            '<span class="round-badge">第 '+esc(r.round)+' 轮</span>'+
+            '<span class="drift-type">漂移类型：'+esc(r.drift_type)+'</span>'+
+          '</div>'+
+          '<div class="desc">'+esc(r.desc)+'</div>'+
+          '<div class="strategy"><b>策略：</b>'+esc(r.strategy)+'</div>'+
+          '<div class="fallback"><b>降级方案：</b>'+esc(r.fallback)+'</div>'+
+          (hi?'<div class="items-row"><span class="it-label">高风险项：</span>'+hi+'</div>':'')+
+          (mi?'<div class="items-row"><span class="it-label">中风险项：</span>'+mi+'</div>':'')+
+          renderLayerTable('L1 指标', r.layer1)+
+          renderLayerTable('L2 指标', r.layer2)+
+          renderAIAnalysis(r.llm_analysis)+
+        '</div>';
+      });
+      html+='</div>';
+    });
+    ct.innerHTML=html;
+  }
+  function strategyText(s){
+    var map={none:'不调整',light:'轻量策略',standard:'标准策略',major:'重大策略',incremental_training:'增量训练',full_retraining:'全量重训',parameter_tuning:'参数调整',feature_reconstruction:'特征重构'};
+    return (s&&s.display_name)||map[(s&&s.type)||'']||(s&&s.type)||'—';
+  }
+  function renderAIAnalysis(ai){
+    if(!ai || ai.status!=='success') return '';
+    var labels={data:'数据维度',feature:'特征维度',model:'模型维度',business:'业务维度'};
+    var dims=ai.dimension_analysis||{};
+    var cards=['data','feature','model','business'].map(function(k){
+      var d=dims[k]||{};
+      var refs=(d.evidence_refs||[]).join('、')||'暂无直接证据引用';
+      return '<div class="ai-dim">'+
+        '<div class="ai-dim-head"><span class="ai-dim-name">'+labels[k]+'</span></div>'+
+        '<div class="ai-conclusion">'+esc(d.conclusion||'证据不足，暂无法判断')+'</div>'+
+        '<div class="ai-basis"><b>判断依据：</b>'+esc(d.basis||'—')+'</div>'+
+        '<div class="ai-evidence"><b>证据引用：</b>'+esc(refs)+'</div>'+
+      '</div>';
+    }).join('');
+    var primary=ai.primary_root_cause||{};
+    var strategy=ai.strategy_recommendation||{};
+    var recs=(ai.recommendations||[]).map(function(x){
+      return '<li><b>'+esc(x.action||'')+'</b>：'+esc(x.reason||'')+'</li>';
+    }).join('');
+    var gaps=ai.evidence_gaps||[];
+    var gapHtml=gaps.length?'<details class="ai-gaps"><summary>查看证据不足项（'+gaps.length+'）</summary><ul>'+gaps.map(function(x){return '<li>'+esc(x)+'</li>';}).join('')+'</ul></details>':'';
+    var thinking=(ai.trace&&ai.trace.thinking_mode==='enabled')?' · Thinking 已开启':'';
+    return '<div class="ai-analysis">'+
+      '<div class="ai-head"><div class="ai-title">AI Agent 四维归因</div><div class="ai-model">'+esc(ai.model||'AI Agent')+thinking+'</div></div>'+
+      '<div class="ai-grid">'+cards+'</div>'+
+      '<div class="ai-summary">'+
+        '<div class="ai-summary-row"><b>首要根因：</b>'+esc(primary.conclusion||'—')+'</div>'+
+        '<div class="ai-summary-row"><b>AI 建议策略：</b>'+esc(strategyText(strategy))+'</div>'+
+        (strategy.reason?'<div class="ai-summary-row"><b>策略依据：</b>'+esc(strategy.reason)+'</div>':'')+
+      '</div>'+
+      (recs?'<ul class="ai-recs">'+recs+'</ul>':'')+gapHtml+
+    '</div>';
+  }
+  function renderLayerTable(title, layer){
+    if(!layer || typeof layer!=='object') return '';
+    var rows=[];
+    // layer may be {items:[{name,value,level}]} or directly an array or object of rows
+    var items = layer.items || layer;
+    if(Array.isArray(items)){
+      items.forEach(function(it){ rows.push(it); });
+    } else if(typeof items==='object'){
+      Object.keys(items).forEach(function(k){
+        var v=items[k];
+        if(typeof v==='object' && v!==null) rows.push({name:k, value:v.value, level:v.level});
+        else rows.push({name:k, value:v});
+      });
+    }
+    if(!rows.length) return '';
+    return '<table class="mini-table"><thead><tr><th>'+esc(title)+'</th><th>值</th><th>等级</th></tr></thead><tbody>'+
+      rows.map(function(r){
+        return '<tr><td>'+esc(r.name)+'</td><td>'+esc(r.value)+'</td>'+
+          '<td class="'+levelClass(r.level)+'">'+esc(r.level||'LOW')+'</td></tr>';
+      }).join('')+'</tbody></table>';
+  }
+
+  /* ---------- Deploy ---------- */
+  function decisionClass(d){
+    d=String(d||'').toLowerCase();
+    if(d.indexOf('deploy')>=0||d.indexOf('上线')>=0||d.indexOf('部署')>=0) return 'deploy';
+    if(d.indexOf('rollback')>=0||d.indexOf('回滚')>=0) return 'rollback';
+    if(d.indexOf('hold')>=0||d.indexOf('保持')>=0||d.indexOf('观察')>=0) return 'hold';
+    return 'none';
+  }
+  function renderDeploy(){
+    var dp=D.deploy||[];
+    var ct=document.getElementById('deployContainer');
+    if(!dp.length){ ct.innerHTML='<div class="empty">暂无部署上线数据</div>'; return; }
+    var groups={};
+    dp.forEach(function(r){
+      var k=r.scenario||'未分类';
+      (groups[k]=groups[k]||[]).push(r);
+    });
+    var html='';
+    Object.keys(groups).forEach(function(sc){
+      html+='<div class="scenario-group"><div class="scenario-title">'+esc(sc)+'</div>';
+      groups[sc].forEach(function(r){
+        var stages=r.stages||[];
+        var stagesHtml='';
+        if(stages.length){
+          stagesHtml='<table class="stages-table"><thead><tr>'+
+            '<th>层级</th><th>样本量</th><th>候选KS</th><th>现役KS</th>'+
+            '<th>候选AUC</th><th>现役AUC</th><th>结果</th>'+
+          '</tr></thead><tbody>'+
+          stages.map(function(s){
+            return '<tr>'+
+              '<td>'+esc(s.layer||s.level||s.name)+'</td>'+
+              '<td>'+esc(s.n)+'</td>'+
+              '<td>'+esc(s.new_ks)+'</td>'+
+              '<td>'+esc(s.ch_ks)+'</td>'+
+              '<td>'+esc(s.new_auc)+'</td>'+
+              '<td>'+esc(s.ch_auc)+'</td>'+
+              '<td>'+esc(s.pass ? '通过' : '未通过')+'</td>'+
+            '</tr>';
+          }).join('')+'</tbody></table>';
+        }
+        html+='<div class="dp-card">'+
+          '<div class="dp-head">'+
+            '<span class="round-badge">第 '+esc(r.round)+' 轮</span>'+
+            '<span class="decision-badge '+decisionClass(r.decision)+'">'+esc(r.decision||'无')+'</span>'+
+          '</div>'+
+          '<div class="desc">'+esc(r.desc)+'</div>'+
+          '<table class="mini-table"><thead><tr><th>候选模型</th><th>现役模型</th><th>切换后现役</th></tr></thead><tbody>'+
+            '<tr><td>'+esc(r.candidate)+'</td><td>'+esc(r.champion)+'</td><td>'+esc(r.champion_after)+'</td></tr>'+
+          '</tbody></table>'+
+          '<div class="final" style="margin-top:10px;"><b>最终决策：</b>'+esc(r.final_decision||r.decision||'—')+'</div>'+
+          stagesHtml+
+        '</div>';
+      });
+      html+='</div>';
+    });
+    ct.innerHTML=html;
+  }
+
+  /* ---------- Demo: gray release ---------- */
+  var slider=document.getElementById('trafficSlider');
+  var pctEl=document.getElementById('trafficPct');
+  var oldBar=document.getElementById('oldBar'), newBar=document.getElementById('newBar');
+  var oldPct=document.getElementById('oldPct'), newPct=document.getElementById('newPct');
+  var logArea=document.getElementById('logArea');
+  var layerChips=document.querySelectorAll('.layer-chip');
+  var layers=['L1','L2-20','L2-50','Full'];
+  var thresholds=[0,20,50,100];
+
+  function logMsg(msg, lv){
+    var d=new Date();
+    var ts=d.toLocaleTimeString('zh-CN',{hour12:false});
+    var cls='lv-info'; if(lv==='ok') cls='lv-ok'; if(lv==='warn') cls='lv-warn'; if(lv==='err') cls='lv-err';
+    var line=document.createElement('div');
+    line.className='log-line';
+    line.innerHTML='<span class="ts">['+ts+']</span><span class="'+cls+'">'+msg+'</span>';
+    logArea.appendChild(line);
+    logArea.scrollTop=logArea.scrollHeight;
+  }
+  function updateBars(v){
+    v=Math.max(0,Math.min(100,v));
+    slider.value=v;
+    pctEl.textContent=v+'%';
+    newBar.style.width=v+'%'; oldBar.style.width=(100-v)+'%';
+    newBar.textContent=v+'%'; oldBar.textContent=(100-v)+'%';
+    newPct.textContent=v+'%'; oldPct.textContent=(100-v)+'%';
+    // update layer chip
+    var activeLayer=0;
+    for(var i=thresholds.length-1;i>=0;i--){ if(v>=thresholds[i]){ activeLayer=i; break; } }
+    layerChips.forEach(function(c,i){ c.classList.toggle('active', i===activeLayer); });
+  }
+  function activeLayerName(){
+    var nm='L1'; layerChips.forEach(function(c){ if(c.classList.contains('active')) nm=c.dataset.layer; });
+    return nm;
+  }
+
+  slider.addEventListener('input',function(){
+    var v=parseInt(slider.value,10);
+    updateBars(v);
+    logMsg('手动调节流量至 '+v+'% （新模型）', 'info');
+  });
+
+  document.getElementById('btnPromote').addEventListener('click',function(){
+    var v=parseInt(slider.value,10);
+    var next=thresholds.find(function(t){ return t>v; });
+    if(next===undefined){ logMsg('已是全量 100%，无法继续晋升', 'warn'); return; }
+    logMsg('执行晋升：'+activeLayerName()+' → 流量从 '+v+'% 提升至 '+next+'%', 'ok');
+    // animate
+    var cur=v; var iv=setInterval(function(){
+      cur+=5; if(cur>=next){ cur=next; clearInterval(iv); updateBars(cur); logMsg('晋升完成，新模型流量 '+cur+'%', 'ok'); }
+      else updateBars(cur);
+    }, 80);
+  });
+
+  document.getElementById('btnRollback').addEventListener('click',function(){
+    var v=parseInt(slider.value,10);
+    if(v<=0){ logMsg('当前流量为 0，无需回滚', 'warn'); return; }
+    logMsg('执行回滚：新模型流量从 '+v+'% 降至 0%', 'err');
+    var cur=v; var iv=setInterval(function(){
+      cur-=10; if(cur<=0){ cur=0; clearInterval(iv); updateBars(0); logMsg('回滚完成，已恢复旧模型 100% 流量', 'err'); }
+      else updateBars(cur);
+    }, 60);
+  });
+
+  document.getElementById('btnReset').addEventListener('click',function(){
+    updateBars(0);
+    logArea.innerHTML='';
+    logMsg('演示已重置', 'info');
+  });
+
+  /* ---------- Simplified reports ---------- */
+  function decCls(d){
+    d=String(d||'').toLowerCase();
+    if(d.indexOf('deploy')>=0) return 'deploy';
+    if(d.indexOf('rollback')>=0) return 'rollback';
+    if(d.indexOf('hold')>=0) return 'hold';
+    return 'hold';
+  }
+  /* ---------- 赛题交付报告 ---------- */
+  function renderCompetition(){
+    var comp = D.competition || {};
+    // 一、任务目标
+    var obj = comp.objective || '——';
+    document.getElementById('compObjective').innerHTML = '<p>'+esc(obj)+'</p>';
+    // 二、技术指标对照
+    var mbody = document.querySelector('#compMetrics tbody');
+    var metrics = comp.metrics || [];
+    if(!metrics.length){
+      mbody.innerHTML = '<tr><td colspan="4" class="empty">暂无技术指标数据</td></tr>';
+    }else{
+      mbody.innerHTML = metrics.map(function(m){
+        var ok = m.met ? '<span class="ok">✔</span>' : '<span class="bad">✘</span>';
+        return '<tr><td>'+esc(m.name)+'</td><td>'+esc(m.target)+'</td><td>'+esc(m.actual)+'</td><td>'+ok+'</td></tr>';
+      }).join('');
+    }
+    // 三、场景迭代与上线
+    var sbody = document.querySelector('#compScenarios tbody');
+    var scenarios = comp.scenarios || [];
+    if(!scenarios.length){
+      sbody.innerHTML = '<tr><td colspan="6" class="empty">暂无场景数据</td></tr>';
+    }else{
+      sbody.innerHTML = scenarios.map(function(s){
+        var badge = s.decision ? '<span class="sc-decision '+decCls(s.decision)+'">'+esc(s.decision)+'</span>' : '—';
+        var roundTxt = (typeof s.round === 'number') ? ('第 '+s.round+' 轮') : esc(s.round);
+        return '<tr><td>'+esc(s.name)+'</td><td>'+esc(s.role)+'</td><td>'+roundTxt+'</td><td>'+esc(s.strategy)+'</td><td>'+badge+'</td><td>'+esc(s.champion_after)+'</td></tr>';
+      }).join('');
+    }
+    // 四、成果交付
+    var del = comp.deliverables || [];
+    if(!del.length){
+      document.getElementById('compDeliverables').innerHTML = '<p class="empty">暂无交付清单</p>';
+    }else{
+      document.getElementById('compDeliverables').innerHTML = '<ul>'+del.map(function(d){return '<li>'+esc(d)+'</li>';}).join('')+'</ul>';
+    }
+  }
+
+  /* ---------- Init ---------- */
+  renderStats();
+  renderTable();
+  renderRootcause();
+  renderDeploy();
+  renderCompetition();
+  logMsg('灰度切换演示就绪，当前阶段：L1 离线评估', 'info');
+  logMsg('可拖动滑块或点击晋升/回滚按钮模拟流量切换', 'info');
+})();
+</script>
+</body>
+</html>
