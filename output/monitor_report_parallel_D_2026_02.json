@@ -1,0 +1,109 @@
+{
+  "scenario": "parallel_D",
+  "phase": "with_label",
+  "n": 20000,
+  "metrics": {
+    "KS": 0.7632629860747554,
+    "AUC": 0.9498861275066428,
+    "bad_rate": 0.04185,
+    "score_psi": 0.0002195978956896934,
+    "max_feat_psi": 0.1349987048519299,
+    "group_psi_ratio": 0.03225806451612903,
+    "ks_drop_rate": -0.04823818329421258,
+    "auc_drop_rate": -0.009017308401670062,
+    "bad_rate_delta_pp": 0.18499999999999975,
+    "max_missing_rate": 0.0,
+    "missing_feat_count": 0
+  },
+  "baseline": {
+    "KS": 0.7281388888888889,
+    "AUC": 0.9413972581018518,
+    "bad_rate": 0.04
+  },
+  "rules": {
+    "R1_KS下降率": {
+      "value": -0.04823818329421258,
+      "level": "LOW"
+    },
+    "R2_AUC下降率": {
+      "value": -0.009017308401670062,
+      "level": "LOW"
+    },
+    "R3_最大特征PSI": {
+      "value": 0.1349987048519299,
+      "level": "MEDIUM"
+    },
+    "R4_群体漂移占比": {
+      "value": 0.03225806451612903,
+      "level": "LOW"
+    },
+    "R5_模型分PSI": {
+      "value": 0.0002195978956896934,
+      "level": "LOW"
+    },
+    "R6_坏账率变化pp": {
+      "value": 0.18499999999999975,
+      "level": "LOW"
+    },
+    "R7_坏账率趋势": {
+      "value": 0.18499999999999975,
+      "level": "LOW"
+    },
+    "DQ_缺失率": {
+      "value": 0.0,
+      "level": "LOW"
+    },
+    "DQ_缺失特征数": {
+      "value": 0,
+      "level": "LOW"
+    }
+  },
+  "overall_level": "MEDIUM",
+  "fired_rules": [
+    "R3_最大特征PSI"
+  ],
+  "feature_psi_top10": [
+    {
+      "feature": "credit_query_times",
+      "psi": 0.1349987048519299
+    },
+    {
+      "feature": "income_level",
+      "psi": 0.009149489736770058
+    },
+    {
+      "feature": "city_tier",
+      "psi": 0.004886705738581461
+    },
+    {
+      "feature": "credit_length_months",
+      "psi": 0.0006957180684907901
+    },
+    {
+      "feature": "click_frequency",
+      "psi": 0.0006593020329460691
+    },
+    {
+      "feature": "ip_change_freq",
+      "psi": 0.0005616619313258388
+    },
+    {
+      "feature": "telecom_score",
+      "psi": 0.000533087342282478
+    },
+    {
+      "feature": "age",
+      "psi": 0.000502140369495581
+    },
+    {
+      "feature": "social_score",
+      "psi": 0.00043912249669882396
+    },
+    {
+      "feature": "app_duration",
+      "psi": 0.00039193154796189806
+    }
+  ],
+  "month": "2026-02",
+  "champion": "model_v218_parallel_D_light_r1.pkl"
+}

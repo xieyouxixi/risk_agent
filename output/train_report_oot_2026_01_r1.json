@@ -1,0 +1,63 @@
+{
+  "scenario": "oot_2026_01",
+  "strategy": "standard",
+  "round": 1,
+  "model_file": "model_v212_oot_2026_01_standard_r1.pkl",
+  "candidates": [
+    {
+      "name": "xgb",
+      "train_ks": 0.6935572429472832,
+      "va_ks": 0.7009349731630015,
+      "oot_ks": 0.7009349731630015,
+      "oot_auc": 0,
+      "train_seconds": 3.6196024417877197,
+      "eval_note": "未见月用尽，选优退化为 train 30% hold-out",
+      "overfit_gap": -0.007377730215718303,
+      "drift_adapt_gap": 0.0,
+      "score": 0.4860324533152864,
+      "gate_pass": true
+    },
+    {
+      "name": "lgb",
+      "train_ks": 0.7227525509110773,
+      "va_ks": 0.7210783646049136,
+      "oot_ks": 0.7210783646049136,
+      "oot_auc": 0,
+      "train_seconds": 2.437560558319092,
+      "eval_note": "未见月用尽，选优退化为 train 30% hold-out",
+      "overfit_gap": 0.001674186306163672,
+      "drift_adapt_gap": 0.0,
+      "score": 0.5,
+      "gate_pass": true
+    },
+    {
+      "name": "lr",
+      "train_ks": 0.6841502478651453,
+      "va_ks": 0.7106900195270914,
+      "oot_ks": 0.7106900195270914,
+      "oot_auc": 0,
+      "train_seconds": 0.20117712020874023,
+      "eval_note": "未见月用尽，选优退化为 train 30% hold-out",
+      "overfit_gap": -0.0265397716619461,
+      "drift_adapt_gap": 0.0,
+      "score": 0.49279666012201456,
+      "gate_pass": true
+    }
+  ],
+  "selected": {
+    "algo": "lgb",
+    "oot_ks": 0.7210783646049136,
+    "oot_auc": 0,
+    "overfit_gap": 0.001674186306163672,
+    "gate_pass": true
+  },
+  "features_dropped": [],
+  "reweight_pos": 1.0,
+  "base_bad_rate": 0.0398,
+  "scenario_bad_rate": 0.0398,
+  "mature_months": [
+    "2026-01"
+  ],
+  "eval_month": "2026-02",
+  "champion_at_start": "model_v2_baseline.pkl"
+}

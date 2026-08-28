@@ -1,0 +1,346 @@
+{
+  "trace": {
+    "trace_id": "m3-parallel_D-r1-20260825T133006",
+    "timestamp": "2026-08-25T13:30:06+08:00",
+    "prompt_version": "m3-v2.1-demo-strategy-v5-expert",
+    "thinking_mode": "enabled",
+    "scenario": "parallel_D",
+    "round": 1
+  },
+  "status": "success",
+  "evidence": {
+    "monitor": {
+      "scenario": "parallel_D",
+      "phase": "with_label",
+      "n": 20000,
+      "metrics": {
+        "KS": 0.7353770841562141,
+        "AUC": 0.9438712356118967,
+        "bad_rate": 0.0402,
+        "score_psi": 0.0006456209704559381,
+        "max_feat_psi": 0.08628279508298585,
+        "group_psi_ratio": 0.0,
+        "ks_drop_rate": -0.022471444750691016,
+        "auc_drop_rate": -0.007087811347415934,
+        "bad_rate_delta_pp": 0.01999999999999988,
+        "max_missing_rate": 0.0,
+        "missing_feat_count": 0
+      },
+      "baseline": {
+        "KS": 0.7192152777777778,
+        "AUC": 0.937228337962963,
+        "bad_rate": 0.04
+      },
+      "rules": {
+        "R1_KS下降率": {
+          "value": -0.022471444750691016,
+          "level": "LOW"
+        },
+        "R2_AUC下降率": {
+          "value": -0.007087811347415934,
+          "level": "LOW"
+        },
+        "R3_最大特征PSI": {
+          "value": 0.08628279508298585,
+          "level": "LOW"
+        },
+        "R4_群体漂移占比": {
+          "value": 0.0,
+          "level": "LOW"
+        },
+        "R5_模型分PSI": {
+          "value": 0.0006456209704559381,
+          "level": "LOW"
+        },
+        "R6_坏账率变化pp": {
+          "value": 0.01999999999999988,
+          "level": "LOW"
+        },
+        "R7_坏账率趋势": {
+          "value": 0.01999999999999988,
+          "level": "LOW"
+        },
+        "DQ_缺失率": {
+          "value": 0.0,
+          "level": "LOW"
+        },
+        "DQ_缺失特征数": {
+          "value": 0,
+          "level": "LOW"
+        }
+      },
+      "overall_level": "LOW",
+      "fired_rules": [],
+      "feature_psi_top10": [
+        {
+          "feature": "credit_query_times",
+          "psi": 0.08628279508298585
+        },
+        {
+          "feature": "age",
+          "psi": 0.0016482634246484328
+        },
+        {
+          "feature": "city_tier",
+          "psi": 0.0012035815007994093
+        },
+        {
+          "feature": "income_level",
+          "psi": 0.0010474762202676785
+        },
+        {
+          "feature": "session_count",
+          "psi": 0.0006224050768887051
+        },
+        {
+          "feature": "reg_to_apply_days",
+          "psi": 0.0005573309929218153
+        },
+        {
+          "feature": "credit_utilization",
+          "psi": 0.0005442791129227492
+        },
+        {
+          "feature": "device_risk_score",
+          "psi": 0.0005272546744864037
+        },
+        {
+          "feature": "night_activity_ratio",
+          "psi": 0.0004623388473243667
+        },
+        {
+          "feature": "credit_length_months",
+          "psi": 0.00043876397559508275
+        }
+      ],
+      "month": "2026-01",
+      "champion": "model_v2_baseline.pkl"
+    },
+    "layer1": {
+      "坏账率变化": {
+        "value_pp": 0.01999999999999988,
+        "level": "LOW"
+      },
+      "客群结构偏移": {
+        "value": 0.16198943809159053,
+        "detail": {
+          "age": 0.16198943809159053,
+          "city_tier": 0.022600000000000037,
+          "loan_amount_request": 0.009500000000000008,
+          "repayment_period": 0.006173333333333364
+        },
+        "level": "MEDIUM"
+      },
+      "KS衰减": {
+        "value": -0.022471444750691016,
+        "level": "LOW"
+      },
+      "AUC衰减": {
+        "value": -0.007087811347415934,
+        "level": "LOW"
+      },
+      "过拟合与泄漏": {
+        "ks_gap": 0,
+        "baseline_auc": 0.9372,
+        "level": "LOW",
+        "note": "已剔除强特征，31特征；仅当 OOT gap>0.15 才告警"
+      }
+    },
+    "layer2": {
+      "IV衰减": {
+        "max_delta_iv": 0.0,
+        "raw_max_delta_iv": 0.09649247076207579,
+        "noise_floor": 0.11641674507498231,
+        "top5": [
+          [
+            "reg_to_apply_days",
+            0.09649247076207579
+          ],
+          [
+            "overdue_history",
+            0.08765545767405214
+          ],
+          [
+            "judicial_risk_score",
+            0.039852190081710925
+          ],
+          [
+            "credit_query_times",
+            0.038457933347302214
+          ],
+          [
+            "telecom_score",
+            0.028358814959877243
+          ]
+        ],
+        "level": "LOW"
+      },
+      "重要性偏移": {
+        "value": 0.0,
+        "raw": 0.06659729448491154,
+        "noise_floor": 0.09292403746097815,
+        "level": "LOW"
+      },
+      "群体性PSI": {
+        "value": 0.0,
+        "level": "LOW"
+      },
+      "单点PSI": {
+        "value": 0.08628279508298585,
+        "top_feature": "credit_query_times",
+        "level": "LOW"
+      },
+      "缺失与越界": {
+        "max_missing": 0.0,
+        "missing_feat_count": 0,
+        "violation_cells": 0,
+        "level": "LOW"
+      }
+    }
+  },
+  "structured_output": {
+    "status": "success",
+    "model": "deepseek-v4-flash",
+    "trace": {
+      "trace_id": "m3-parallel_D-r1-20260825T133006",
+      "timestamp": "2026-08-25T13:30:06+08:00",
+      "prompt_version": "m3-v2.1-demo-strategy-v5-expert",
+      "thinking_mode": "enabled",
+      "scenario": "parallel_D",
+      "round": 1
+    },
+    "dimension_analysis": {
+      "data": {
+        "status": "NORMAL",
+        "conclusion": "数据质量正常，无缺失、无越界，未发现数据层异常。",
+        "basis": "缺失率0%，缺失特征数0，越界细胞0，DQ规则均LOW。",
+        "confidence": 0.95,
+        "evidence_refs": [
+          "monitor.metrics.max_missing_rate",
+          "monitor.metrics.missing_feat_count",
+          "layer2.缺失与越界",
+          "monitor.rules.DQ_缺失率",
+          "monitor.rules.DQ_缺失特征数"
+        ]
+      },
+      "feature": {
+        "status": "MEDIUM",
+        "conclusion": "存在客群结构偏移（MEDIUM），主要由年龄结构变化驱动，但单点PSI、群体性PSI、IV衰减和重要性偏移均处于LOW水平。",
+        "basis": "layer1客群结构偏移level=MEDIUM，detail.age=0.162；最大特征PSI=0.086为LOW，群体性PSI=0，IV衰减LOW。",
+        "confidence": 0.8,
+        "evidence_refs": [
+          "layer1.客群结构偏移",
+          "layer1.客群结构偏移.detail.age",
+          "layer1.客群结构偏移.detail.city_tier",
+          "monitor.metrics.max_feat_psi",
+          "layer2.单点PSI",
+          "layer2.群体性PSI",
+          "layer2.IV衰减"
+        ]
+      },
+      "model": {
+        "status": "NORMAL",
+        "conclusion": "模型区分能力稳定且略有提升，KS和AUC均未衰减，模型分PSI极低，无过拟合证据。",
+        "basis": "KS drop rate -2.25%（LOW），AUC drop rate -0.71%（LOW），score_psi 0.0006，过拟合与泄漏LOW。",
+        "confidence": 0.9,
+        "evidence_refs": [
+          "monitor.rules.R1_KS下降率",
+          "monitor.rules.R2_AUC下降率",
+          "monitor.rules.R5_模型分PSI",
+          "monitor.metrics.ks_drop_rate",
+          "monitor.metrics.auc_drop_rate",
+          "layer1.过拟合与泄漏"
+        ]
+      },
+      "business": {
+        "status": "NORMAL",
+        "conclusion": "坏账率变化不显著，业务表现正常，未发现标签或业务结构恶化。",
+        "basis": "坏账率变化0.02pp（LOW），坏账率趋势LOW，当前坏账率4.02% vs 基线4.0%。",
+        "confidence": 0.9,
+        "evidence_refs": [
+          "monitor.rules.R6_坏账率变化pp",
+          "monitor.rules.R7_坏账率趋势",
+          "monitor.metrics.bad_rate_delta_pp",
+          "monitor.metrics.bad_rate"
+        ]
+      }
+    },
+    "independent_anomalies": [
+      {
+        "anomaly_id": "A1",
+        "dimension": "feature",
+        "level": "MEDIUM",
+        "conclusion": "客群结构偏移（MEDIUM），主要由年龄结构变化驱动，city_tier等亦有轻微偏移；该偏移未造成群体性PSI超标或模型性能衰减。",
+        "merged_indicators": [],
+        "evidence_refs": [
+          "layer1.客群结构偏移",
+          "layer1.客群结构偏移.detail.age",
+          "layer1.客群结构偏移.detail.city_tier"
+        ]
+      }
+    ],
+    "anomaly_summary": {
+      "independent_medium_count": 1,
+      "independent_high_count": 0,
+      "duplicate_evidence_merged": true
+    },
+    "primary_root_cause": {
+      "conclusion": "客群年龄结构发生偏移（age偏移量0.162），是当前唯一的轻度风险信号；但模型性能稳定、坏账率正常，尚未对模型产生实质负面影响。",
+      "confidence": 0.55,
+      "evidence_refs": [
+        "layer1.客群结构偏移.detail.age",
+        "monitor.metrics.KS",
+        "monitor.metrics.AUC",
+        "monitor.metrics.bad_rate"
+      ]
+    },
+    "recommendations": [
+      {
+        "action": "持续监控年龄及客群结构分布变化，增加按年龄段的分层性能监测，观察偏移是否持续或扩大。",
+        "reason": "客群结构偏移已达到MEDIUM，当前虽未影响模型，但若不跟踪可能演变为模型漂移。",
+        "confidence": 0.8,
+        "evidence_refs": [
+          "layer1.客群结构偏移",
+          "layer1.客群结构偏移.detail.age"
+        ]
+      },
+      {
+        "action": "保持当前模型版本，暂不触发重训；若后续客群偏移持续增大或KS/AUC出现衰减，再启动增量训练。",
+        "reason": "模型区分能力、坏账率和数据质量均正常，仅存在单一特征类MEDIUM。",
+        "confidence": 0.75,
+        "evidence_refs": [
+          "monitor.rules.R1_KS下降率",
+          "monitor.rules.R2_AUC下降率",
+          "monitor.rules.R6_坏账率变化pp"
+        ]
+      }
+    ],
+    "strategy_recommendation": {
+      "type": "light",
+      "display_name": "light",
+      "reason": "存在一个独立特征类MEDIUM（客群结构偏移），且模型和业务均正常，满足light触发条件。",
+      "confidence": 0.8,
+      "confidence_basis": "客群结构偏移MEDIUM明确，模型KS/AUC及坏账率均正常，无更高等级异常。",
+      "triggered_conditions": [
+        "存在一个独立特征类MEDIUM",
+        "模型和业务维度均正常"
+      ],
+      "not_triggered_conditions": [
+        "不存在独立HIGH异常",
+        "不存在两个及以上独立MEDIUM异常",
+        "不存在模型、业务或标签MEDIUM异常",
+        "不存在需要全量重训的多维客观证据"
+      ],
+      "evidence_refs": [
+        "layer1.客群结构偏移",
+        "monitor.rules.R1_KS下降率",
+        "monitor.rules.R6_坏账率变化pp"
+      ]
+    },
+    "evidence_gaps": [
+      "缺少客群结构偏移的时间序列趋势，无法判断偏移是否持续",
+      "缺少年龄分段的具体分布对比数据，难以定位偏移原因",
+      "缺少按客群分层的坏账率分解，无法完全排除业务局部风险"
+    ]
+  }
+}

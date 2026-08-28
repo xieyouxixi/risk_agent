@@ -1,0 +1,63 @@
+{
+  "scenario": "parallel_C",
+  "strategy": "standard",
+  "round": 3,
+  "model_file": "model_v217_parallel_C_standard_r3.pkl",
+  "candidates": [
+    {
+      "name": "xgb",
+      "train_ks": 0.6972963907567414,
+      "va_ks": 0.6995599547111635,
+      "oot_ks": 0.6995599547111635,
+      "oot_auc": 0,
+      "train_seconds": 3.676995038986206,
+      "eval_note": "未见月用尽，选优退化为 train 30% hold-out",
+      "overfit_gap": -0.0022635639544220654,
+      "drift_adapt_gap": 0.0,
+      "score": 0.4858470094108863,
+      "gate_pass": true
+    },
+    {
+      "name": "lgb",
+      "train_ks": 0.7252895668884487,
+      "va_ks": 0.7199385209342081,
+      "oot_ks": 0.7199385209342081,
+      "oot_auc": 0,
+      "train_seconds": 2.4879062175750732,
+      "eval_note": "未见月用尽，选优退化为 train 30% hold-out",
+      "overfit_gap": 0.00535104595424063,
+      "drift_adapt_gap": 0.0,
+      "score": 0.5,
+      "gate_pass": true
+    },
+    {
+      "name": "lr",
+      "train_ks": 0.6841502478651453,
+      "va_ks": 0.7106900195270914,
+      "oot_ks": 0.7106900195270914,
+      "oot_auc": 0,
+      "train_seconds": 0.2086474895477295,
+      "eval_note": "未见月用尽，选优退化为 train 30% hold-out",
+      "overfit_gap": -0.0265397716619461,
+      "drift_adapt_gap": 0.0,
+      "score": 0.49357688112374126,
+      "gate_pass": true
+    }
+  ],
+  "selected": {
+    "algo": "lgb",
+    "oot_ks": 0.7199385209342081,
+    "oot_auc": 0,
+    "overfit_gap": 0.00535104595424063,
+    "gate_pass": true
+  },
+  "features_dropped": [],
+  "reweight_pos": 1.3373,
+  "base_bad_rate": 0.0398,
+  "scenario_bad_rate": 0.0532,
+  "mature_months": [
+    "2026-03"
+  ],
+  "eval_month": null,
+  "champion_at_start": "model_v216_parallel_C_standard_r2.pkl"
+}

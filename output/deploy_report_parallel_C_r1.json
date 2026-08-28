@@ -1,0 +1,223 @@
+{
+  "scenario": "parallel_C",
+  "round": 1,
+  "mature_months": [
+    "2026-01"
+  ],
+  "candidate_name": "model_v215_parallel_C_standard_r1.pkl",
+  "candidate_algo": "lgb",
+  "champion_name": "model_v2_baseline.pkl",
+  "champion_algo": "lgb",
+  "eval_set": "当月数据(2026-01)",
+  "eval_note": "评估基于当月数据全量 20000 行（无延迟重训自评）",
+  "n_eval": 20000,
+  "stages": {
+    "L1_OOT": {
+      "n": 20000,
+      "new": {
+        "KS": 0.7458653713468216,
+        "AUC": 0.9367417422421149,
+        "bad_rate": 0.0446,
+        "pass_rate": 0.98195,
+        "capture_top10": 0.34,
+        "predict_bad_rate": 0.01805
+      },
+      "champion": {
+        "KS": 0.7574450538876961,
+        "AUC": 0.9457209714711092,
+        "bad_rate": 0.0446,
+        "pass_rate": 0.9827,
+        "capture_top10": 0.361,
+        "predict_bad_rate": 0.0173
+      },
+      "psi_new_vs_champion": 0.005291963659001772,
+      "pass": true,
+      "guardrails": {
+        "样本量n≥10000": true,
+        "坏样本≥300": true,
+        "KS恢复率≥0.90": true,
+        "AUC非劣(容忍0.015)": true,
+        "PSI<0.30": true,
+        "新模型达合格线": true
+      }
+    },
+    "L2_20pct": {
+      "n": 4000,
+      "new": {
+        "KS": 0.7543630017452008,
+        "AUC": 0.9372949389179757,
+        "bad_rate": 0.045,
+        "pass_rate": 0.9855,
+        "capture_top10": 0.3375,
+        "predict_bad_rate": 0.0145
+      },
+      "champion": {
+        "KS": 0.7675974403723095,
+        "AUC": 0.9472425828970332,
+        "bad_rate": 0.045,
+        "pass_rate": 0.985,
+        "capture_top10": 0.365,
+        "predict_bad_rate": 0.015
+      },
+      "psi_new_vs_champion": 0.0058088056059981,
+      "pass": true,
+      "guardrails": {
+        "新模型达合格线(KS≥0.35,AUC≥0.75)": true,
+        "KS比率(champion×0.95)": true,
+        "AUC非劣(差≥-0.015)": true,
+        "模型分PSI<0.30": true,
+        "预测坏账率护栏(新≤champion×1.20)": true
+      }
+    },
+    "L2_50pct": {
+      "n": 10000,
+      "new": {
+        "KS": 0.7443999553148831,
+        "AUC": 0.9340426507681725,
+        "bad_rate": 0.0445,
+        "pass_rate": 0.9833,
+        "capture_top10": 0.337,
+        "predict_bad_rate": 0.0167
+      },
+      "champion": {
+        "KS": 0.7626361867132333,
+        "AUC": 0.943820459903927,
+        "bad_rate": 0.0445,
+        "pass_rate": 0.9836,
+        "capture_top10": 0.361,
+        "predict_bad_rate": 0.0164
+      },
+      "psi_new_vs_champion": 0.005155389798107712,
+      "pass": true,
+      "guardrails": {
+        "新模型达合格线(KS≥0.35,AUC≥0.75)": true,
+        "KS比率(champion×0.95)": true,
+        "AUC非劣(差≥-0.015)": true,
+        "模型分PSI<0.30": true,
+        "预测坏账率护栏(新≤champion×1.20)": true,
+        "通过率偏差<5pp": true,
+        "坏账捕获率Top10%不显著降": true
+      }
+    },
+    "FULL_100pct": {
+      "n": 20000,
+      "new": {
+        "KS": 0.7458653713468216,
+        "AUC": 0.9367417422421149,
+        "bad_rate": 0.0446,
+        "pass_rate": 0.98195,
+        "capture_top10": 0.34,
+        "predict_bad_rate": 0.01805
+      },
+      "champion": {
+        "KS": 0.7574450538876961,
+        "AUC": 0.9457209714711092,
+        "bad_rate": 0.0446,
+        "pass_rate": 0.9827,
+        "capture_top10": 0.361,
+        "predict_bad_rate": 0.0173
+      },
+      "psi_new_vs_champion": 0.005291963659001772,
+      "pass": true,
+      "significance": {
+        "KS_diff": -0.011579682540874492,
+        "KS_Bootstrap95下界": -0.021529122437056673,
+        "KS显著优(差>+0.02且bootstrap95下界>0)": false,
+        "AUC_diff": -0.008979229228994412,
+        "AUC_DeLong_z": -11.56297250716321,
+        "AUC_DeLong_p": 6.347287835546385e-31,
+        "AUC显著优(DeLong p<0.05)": false,
+        "显著优判定(任一)": false
+      }
+    }
+  },
+  "gain_top10": {
+    "champion": [
+      {
+        "feature": "social_score",
+        "gain": 0.11596922499530869
+      },
+      {
+        "feature": "judicial_risk_score",
+        "gain": 0.10602364421092138
+      },
+      {
+        "feature": "telecom_score",
+        "gain": 0.09044848939763558
+      },
+      {
+        "feature": "overdue_history",
+        "gain": 0.08463126290110715
+      },
+      {
+        "feature": "ecomm_risk_score",
+        "gain": 0.07712516419590917
+      },
+      {
+        "feature": "credit_query_times",
+        "gain": 0.07393507224620004
+      },
+      {
+        "feature": "reg_to_apply_days",
+        "gain": 0.07224620003753049
+      },
+      {
+        "feature": "multi_loan_count",
+        "gain": 0.070369675361231
+      },
+      {
+        "feature": "blacklist_hit",
+        "gain": 0.029836742353161944
+      },
+      {
+        "feature": "gps_anomaly",
+        "gain": 0.029273784950272098
+      }
+    ],
+    "new": [
+      {
+        "feature": "social_score",
+        "gain": 0.09589964931211221
+      },
+      {
+        "feature": "judicial_risk_score",
+        "gain": 0.08875101159967629
+      },
+      {
+        "feature": "telecom_score",
+        "gain": 0.0762071756137038
+      },
+      {
+        "feature": "overdue_history",
+        "gain": 0.07094685729700566
+      },
+      {
+        "feature": "credit_query_times",
+        "gain": 0.06406797949824657
+      },
+      {
+        "feature": "ecomm_risk_score",
+        "gain": 0.06298893984353925
+      },
+      {
+        "feature": "reg_to_apply_days",
+        "gain": 0.058268141354194766
+      },
+      {
+        "feature": "multi_loan_count",
+        "gain": 0.057998381440517936
+      },
+      {
+        "feature": "job_stability",
+        "gain": 0.04275694631777718
+      },
+      {
+        "feature": "loan_amount_request",
+        "gain": 0.03304558942541139
+      }
+    ]
+  },
+  "final_decision": "全量上线：候选与 champion 非劣（ΔKS=-0.0116，ΔAUC=-0.0090），模型已融合最新数据，完成替换",
+  "decision_code": "deploy_non_inferior",
+  "champion_after": "model_v215_parallel_C_standard_r1.pkl"
+}

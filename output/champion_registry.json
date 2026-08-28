@@ -1,0 +1,10 @@
+{
+  "current_champion": "model_v2_baseline.pkl",
+  "history": [
+    {
+      "ts": "2026-08-25T13:36:26",
+      "event": "reset",
+      "note": "演示重跑，champion 复位到 v2 基线"
+    }
+  ]
+}

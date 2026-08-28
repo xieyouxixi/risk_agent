@@ -1,0 +1,110 @@
+{
+  "scenario": "parallel_C",
+  "phase": "with_label",
+  "n": 20000,
+  "metrics": {
+    "KS": 0.7865203248933487,
+    "AUC": 0.9443036357528802,
+    "bad_rate": 0.0532,
+    "score_psi": 0.0002984189139290699,
+    "max_feat_psi": 0.0007944571184379451,
+    "group_psi_ratio": 0.0,
+    "ks_drop_rate": -0.0863644600704254,
+    "auc_drop_rate": -0.005340734151709627,
+    "bad_rate_delta_pp": 1.3199999999999996,
+    "max_missing_rate": 0.0,
+    "missing_feat_count": 0
+  },
+  "baseline": {
+    "KS": 0.7239930555555556,
+    "AUC": 0.9392871527777779,
+    "bad_rate": 0.04
+  },
+  "rules": {
+    "R1_KS下降率": {
+      "value": -0.0863644600704254,
+      "level": "LOW"
+    },
+    "R2_AUC下降率": {
+      "value": -0.005340734151709627,
+      "level": "LOW"
+    },
+    "R3_最大特征PSI": {
+      "value": 0.0007944571184379451,
+      "level": "LOW"
+    },
+    "R4_群体漂移占比": {
+      "value": 0.0,
+      "level": "LOW"
+    },
+    "R5_模型分PSI": {
+      "value": 0.0002984189139290699,
+      "level": "LOW"
+    },
+    "R6_坏账率变化pp": {
+      "value": 1.3199999999999996,
+      "level": "MEDIUM"
+    },
+    "R7_坏账率趋势": {
+      "value": 1.3199999999999996,
+      "level": "MEDIUM"
+    },
+    "DQ_缺失率": {
+      "value": 0.0,
+      "level": "LOW"
+    },
+    "DQ_缺失特征数": {
+      "value": 0,
+      "level": "LOW"
+    }
+  },
+  "overall_level": "MEDIUM",
+  "fired_rules": [
+    "R6_坏账率变化pp",
+    "R7_坏账率趋势"
+  ],
+  "feature_psi_top10": [
+    {
+      "feature": "income_level",
+      "psi": 0.0007944571184379451
+    },
+    {
+      "feature": "credit_utilization",
+      "psi": 0.0004916327012583301
+    },
+    {
+      "feature": "device_risk_score",
+      "psi": 0.00047504855843929627
+    },
+    {
+      "feature": "debt_income_ratio",
+      "psi": 0.00042234808590188534
+    },
+    {
+      "feature": "ip_change_freq",
+      "psi": 0.00042079199620625877
+    },
+    {
+      "feature": "night_activity_ratio",
+      "psi": 0.00041432345423194196
+    },
+    {
+      "feature": "credit_query_times",
+      "psi": 0.00038382693253014976
+    },
+    {
+      "feature": "ecomm_risk_score",
+      "psi": 0.0003717727909076864
+    },
+    {
+      "feature": "telecom_score",
+      "psi": 0.0003696752532425227
+    },
+    {
+      "feature": "app_duration",
+      "psi": 0.00035978724139886957
+    }
+  ],
+  "month": "2026-03",
+  "champion": "model_v216_parallel_C_standard_r2.pkl"
+}

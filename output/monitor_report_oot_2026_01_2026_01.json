@@ -1,0 +1,110 @@
+{
+  "scenario": "oot_2026_01",
+  "phase": "with_label",
+  "n": 20000,
+  "metrics": {
+    "KS": 0.6982631578947368,
+    "AUC": 0.9221856842105264,
+    "bad_rate": 0.05,
+    "score_psi": 0.001185758227258076,
+    "max_feat_psi": 0.0010926511965836472,
+    "group_psi_ratio": 0.0,
+    "ks_drop_rate": 0.02913191714694745,
+    "auc_drop_rate": 0.016050148232960363,
+    "bad_rate_delta_pp": 1.0000000000000002,
+    "max_missing_rate": 0.0,
+    "missing_feat_count": 0
+  },
+  "baseline": {
+    "KS": 0.7192152777777778,
+    "AUC": 0.937228337962963,
+    "bad_rate": 0.04
+  },
+  "rules": {
+    "R1_KS下降率": {
+      "value": 0.02913191714694745,
+      "level": "LOW"
+    },
+    "R2_AUC下降率": {
+      "value": 0.016050148232960363,
+      "level": "LOW"
+    },
+    "R3_最大特征PSI": {
+      "value": 0.0010926511965836472,
+      "level": "LOW"
+    },
+    "R4_群体漂移占比": {
+      "value": 0.0,
+      "level": "LOW"
+    },
+    "R5_模型分PSI": {
+      "value": 0.001185758227258076,
+      "level": "LOW"
+    },
+    "R6_坏账率变化pp": {
+      "value": 1.0000000000000002,
+      "level": "MEDIUM"
+    },
+    "R7_坏账率趋势": {
+      "value": 1.0000000000000002,
+      "level": "MEDIUM"
+    },
+    "DQ_缺失率": {
+      "value": 0.0,
+      "level": "LOW"
+    },
+    "DQ_缺失特征数": {
+      "value": 0,
+      "level": "LOW"
+    }
+  },
+  "overall_level": "MEDIUM",
+  "fired_rules": [
+    "R6_坏账率变化pp",
+    "R7_坏账率趋势"
+  ],
+  "feature_psi_top10": [
+    {
+      "feature": "job_stability",
+      "psi": 0.0010926511965836472
+    },
+    {
+      "feature": "social_score",
+      "psi": 0.0008151995005901263
+    },
+    {
+      "feature": "credit_query_times",
+      "psi": 0.0007758218814816326
+    },
+    {
+      "feature": "ip_change_freq",
+      "psi": 0.0007512827059102411
+    },
+    {
+      "feature": "app_duration",
+      "psi": 0.0007253986100789185
+    },
+    {
+      "feature": "income_level",
+      "psi": 0.0007056686072815984
+    },
+    {
+      "feature": "telecom_score",
+      "psi": 0.0006903531353267873
+    },
+    {
+      "feature": "judicial_risk_score",
+      "psi": 0.0006721976439413735
+    },
+    {
+      "feature": "age",
+      "psi": 0.0006489298903790196
+    },
+    {
+      "feature": "click_frequency",
+      "psi": 0.0005876318970241274
+    }
+  ],
+  "month": "2026-01",
+  "champion": "model_v2_baseline.pkl"
+}

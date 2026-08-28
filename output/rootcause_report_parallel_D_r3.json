@@ -1,0 +1,257 @@
+{
+  "scenario": "parallel_D",
+  "round": 3,
+  "layer1": {
+    "坏账率变化": {
+      "value_pp": 0.68,
+      "level": "LOW"
+    },
+    "客群结构偏移": {
+      "value": 0.3353,
+      "detail": {
+        "age": 0.2684030968697907,
+        "city_tier": 0.3353,
+        "loan_amount_request": 0.00830000000000003,
+        "repayment_period": 0.006073333333333389
+      },
+      "level": "HIGH"
+    },
+    "KS衰减": {
+      "value": -0.07116064261274523,
+      "level": "LOW"
+    },
+    "AUC衰减": {
+      "value": -0.005696967636175096,
+      "level": "LOW"
+    },
+    "过拟合与泄漏": {
+      "ks_gap": 0,
+      "baseline_auc": 0.9448,
+      "level": "LOW",
+      "note": "已剔除强特征，31特征；仅当 OOT gap>0.15 才告警"
+    }
+  },
+  "layer2": {
+    "IV衰减": {
+      "max_delta_iv": 0.0,
+      "raw_max_delta_iv": 0.03391788459584644,
+      "noise_floor": 0.11641674507498231,
+      "top5": [
+        [
+          "social_score",
+          0.03391788459584644
+        ],
+        [
+          "credit_query_times",
+          0.029185754319139556
+        ],
+        [
+          "credit_length_months",
+          0.01990295244797691
+        ],
+        [
+          "multi_loan_count",
+          0.01935221790799263
+        ],
+        [
+          "overdue_history",
+          0.018198665744706966
+        ]
+      ],
+      "level": "LOW"
+    },
+    "重要性偏移": {
+      "value": 0.013215400624349644,
+      "raw": 0.10613943808532779,
+      "noise_floor": 0.09292403746097815,
+      "level": "LOW"
+    },
+    "群体性PSI": {
+      "value": 0.0967741935483871,
+      "level": "LOW"
+    },
+    "单点PSI": {
+      "value": 0.36113293370297694,
+      "top_feature": "income_level",
+      "level": "MEDIUM"
+    },
+    "缺失与越界": {
+      "max_missing": 0.0,
+      "missing_feat_count": 0,
+      "violation_cells": 0,
+      "level": "LOW"
+    }
+  },
+  "verdict": {
+    "drift_type": "联合漂移（特征+标签）：客群结构与宏观环境同时变化",
+    "high_items": [
+      "客群结构偏移"
+    ],
+    "medium_items": [
+      "单点PSI"
+    ],
+    "strategy": "major",
+    "strategy_force_last": "major"
+  },
+  "llm_analysis": {
+    "status": "success",
+    "model": "deepseek-v4-flash",
+    "trace": {
+      "trace_id": "m3-parallel_D-r3-20260825T133225",
+      "timestamp": "2026-08-25T13:32:25+08:00",
+      "prompt_version": "m3-v2.1-demo-strategy-v5-expert",
+      "thinking_mode": "enabled",
+      "scenario": "parallel_D",
+      "round": 3
+    },
+    "dimension_analysis": {
+      "data": {
+        "status": "NORMAL",
+        "conclusion": "数据质量正常：缺失率0、缺失特征数0、无越界单元格，未发现数据质量故障。",
+        "basis": "monitor.metrics.max_missing_rate=0、missing_feat_count=0，layer2.缺失与越界=LOW",
+        "confidence": 0.95,
+        "evidence_refs": [
+          "monitor.metrics.max_missing_rate",
+          "monitor.metrics.missing_feat_count",
+          "layer2.缺失与越界"
+        ]
+      },
+      "feature": {
+        "status": "HIGH",
+        "conclusion": "特征分布发生显著漂移：income_level PSI=0.361、credit_query_times=0.212、city_tier=0.162，客群结构偏移HIGH，单点PSI MEDIUM，整体特征类异常明确。",
+        "basis": "R3_最大特征PSI=HIGH，layer1.客群结构偏移=HIGH，layer2.单点PSI=MEDIUM，feature_psi_top10 显示多个特征超阈值",
+        "confidence": 0.9,
+        "evidence_refs": [
+          "monitor.metrics.max_feat_psi",
+          "monitor.rules.R3_最大特征PSI",
+          "monitor.feature_psi_top10",
+          "layer1.客群结构偏移",
+          "layer2.单点PSI"
+        ]
+      },
+      "model": {
+        "status": "NORMAL",
+        "conclusion": "模型区分度未下降（KS 0.7376→0.7901，AUC 0.9448→0.9502），模型分PSI=0.0055，KS/AUC衰减均为LOW，无过拟合泄漏告警。",
+        "basis": "monitor.rules.R1/R2=LOW，layer1.KS衰减/AUC衰减/过拟合与泄漏=LOW，monitor.metrics.score_psi=LOW",
+        "confidence": 0.92,
+        "evidence_refs": [
+          "monitor.rules.R1_KS下降率",
+          "monitor.rules.R2_AUC下降率",
+          "monitor.metrics.score_psi",
+          "layer1.KS衰减",
+          "layer1.AUC衰减",
+          "layer1.过拟合与泄漏"
+        ]
+      },
+      "business": {
+        "status": "NORMAL",
+        "conclusion": "业务表现未明显恶化：坏账率4.68% vs 基线4.00%，变化0.68pp，坏账率趋势规则为LOW。",
+        "basis": "monitor.rules.R6_坏账率变化pp=LOW，R7_坏账率趋势=LOW",
+        "confidence": 0.85,
+        "evidence_refs": [
+          "monitor.rules.R6_坏账率变化pp",
+          "monitor.rules.R7_坏账率趋势",
+          "monitor.metrics.bad_rate_delta_pp"
+        ]
+      }
+    },
+    "independent_anomalies": [
+      {
+        "anomaly_id": "A1",
+        "dimension": "feature",
+        "level": "HIGH",
+        "conclusion": "多个特征分布漂移与客群结构偏移同源：max_feat_psi=0.361（income_level），credit_query_times=0.212，city_tier=0.162，客群结构偏移HIGH；模型与业务正常。",
+        "merged_indicators": [
+          "monitor.rules.R3_最大特征PSI",
+          "monitor.metrics.max_feat_psi",
+          "layer2.单点PSI",
+          "monitor.feature_psi_top10",
+          "layer1.客群结构偏移",
+          "layer2.群体性PSI"
+        ],
+        "evidence_refs": [
+          "monitor.metrics.max_feat_psi",
+          "monitor.rules.R3_最大特征PSI",
+          "monitor.feature_psi_top10",
+          "layer1.客群结构偏移",
+          "layer2.单点PSI"
+        ]
+      }
+    ],
+    "anomaly_summary": {
+      "independent_medium_count": 0,
+      "independent_high_count": 1,
+      "duplicate_evidence_merged": true
+    },
+    "primary_root_cause": {
+      "conclusion": "当前异常首要根因是客群/特征分布漂移：income_level、credit_query_times、city_tier 等特征分布大幅变化，引发最大特征PSI HIGH和客群结构偏移HIGH；非模型能力衰退或数据质量故障。",
+      "confidence": 0.87,
+      "evidence_refs": [
+        "monitor.metrics.max_feat_psi",
+        "monitor.feature_psi_top10",
+        "layer1.客群结构偏移",
+        "layer2.单点PSI"
+      ]
+    },
+    "recommendations": [
+      {
+        "action": "对 income_level、credit_query_times、city_tier 做分箱/分群对比，定位漂移来源（渠道、客群、准入策略或外部环境），并评估其对模型打分的实际影响。",
+        "reason": "最高PSI特征显著漂移且客群结构偏移HIGH，需要先定位根因以避免误判。",
+        "confidence": 0.85,
+        "evidence_refs": [
+          "monitor.feature_psi_top10",
+          "layer1.客群结构偏移"
+        ]
+      },
+      {
+        "action": "鉴于模型KS/AUC未衰减、模型分PSI低、坏账率正常，暂不触发全量重训，可进入增量训练或短期密切监控。",
+        "reason": "模型和业务维度均正常，唯一独立异常是特征HIGH，满足standard而非major。",
+        "confidence": 0.8,
+        "evidence_refs": [
+          "monitor.rules.R1_KS下降率",
+          "monitor.rules.R2_AUC下降率",
+          "monitor.metrics.score_psi",
+          "monitor.rules.R6_坏账率变化pp"
+        ]
+      },
+      {
+        "action": "若漂移持续或传导至模型分/坏账率，再考虑重训、样本加权或特征稳定性约束。",
+        "reason": "当前漂移尚未影响模型和业务结果，但需设置触发条件以防后续恶化。",
+        "confidence": 0.75,
+        "evidence_refs": [
+          "layer1.客群结构偏移"
+        ]
+      }
+    ],
+    "strategy_recommendation": {
+      "type": "standard",
+      "display_name": "standard",
+      "reason": "存在一个非纯数据质量的独立HIGH（特征维度），模型与业务均正常，未达到major条件，按顺序取最高满足策略为standard。",
+      "confidence": 0.82,
+      "confidence_basis": "R3最大特征PSI HIGH、客群结构偏移HIGH等强证据支持特征HIGH；模型/业务均NORMAL降低major概率。",
+      "triggered_conditions": [
+        "存在一个非纯数据质量的独立 HIGH（A1 特征漂移）",
+        "模型、业务维度均为 NORMAL，无独立MEDIUM/HIGH",
+        "已合并同一根因产生的重复异常，独立HIGH计数为1"
+      ],
+      "not_triggered_conditions": [
+        "不存在两个及以上相互独立的 HIGH（独立HIGH计数=1）",
+        "不存在特征/数据 HIGH 伴随模型或业务独立 HIGH（model/business均NORMAL）",
+        "不存在多维客观证据共同表明需要全量重训",
+        "不存在模型/业务/标签出现MEDIUM需要增量训练"
+      ],
+      "evidence_refs": [
+        "monitor.rules.R3_最大特征PSI",
+        "layer1.客群结构偏移",
+        "layer2.单点PSI",
+        "monitor.metrics.score_psi",
+        "monitor.rules.R6_坏账率变化pp"
+      ]
+    },
+    "evidence_gaps": [
+      "未提供 income_level 之外更细分的分箱/分群分布，无法定位具体漂移来源（如渠道、准入策略）",
+      "未提供特征漂移与模型打分的联合分布，无法量化对最终排序的直接影响",
+      "未提供近多期趋势数据，无法判断漂移是瞬时波动还是持续恶化"
+    ]
+  }
+}

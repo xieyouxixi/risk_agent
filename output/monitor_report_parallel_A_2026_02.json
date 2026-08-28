@@ -1,0 +1,107 @@
+{
+  "scenario": "parallel_A",
+  "phase": "with_label",
+  "n": 20000,
+  "metrics": {
+    "KS": 0.757136324685809,
+    "AUC": 0.9489492007548418,
+    "bad_rate": 0.04065,
+    "score_psi": 0.0004003656085633866,
+    "max_feat_psi": 0.0006957180684907901,
+    "group_psi_ratio": 0.0,
+    "ks_drop_rate": -0.0527255858985632,
+    "auc_drop_rate": -0.0125058775083068,
+    "bad_rate_delta_pp": 0.06499999999999978,
+    "max_missing_rate": 0.0,
+    "missing_feat_count": 0
+  },
+  "baseline": {
+    "KS": 0.7192152777777778,
+    "AUC": 0.937228337962963,
+    "bad_rate": 0.04
+  },
+  "rules": {
+    "R1_KS下降率": {
+      "value": -0.0527255858985632,
+      "level": "LOW"
+    },
+    "R2_AUC下降率": {
+      "value": -0.0125058775083068,
+      "level": "LOW"
+    },
+    "R3_最大特征PSI": {
+      "value": 0.0006957180684907901,
+      "level": "LOW"
+    },
+    "R4_群体漂移占比": {
+      "value": 0.0,
+      "level": "LOW"
+    },
+    "R5_模型分PSI": {
+      "value": 0.0004003656085633866,
+      "level": "LOW"
+    },
+    "R6_坏账率变化pp": {
+      "value": 0.06499999999999978,
+      "level": "LOW"
+    },
+    "R7_坏账率趋势": {
+      "value": 0.06499999999999978,
+      "level": "LOW"
+    },
+    "DQ_缺失率": {
+      "value": 0.0,
+      "level": "LOW"
+    },
+    "DQ_缺失特征数": {
+      "value": 0,
+      "level": "LOW"
+    }
+  },
+  "overall_level": "LOW",
+  "fired_rules": [],
+  "feature_psi_top10": [
+    {
+      "feature": "credit_length_months",
+      "psi": 0.0006957180684907901
+    },
+    {
+      "feature": "click_frequency",
+      "psi": 0.0006593020329460691
+    },
+    {
+      "feature": "social_score",
+      "psi": 0.0006440474683805616
+    },
+    {
+      "feature": "ip_change_freq",
+      "psi": 0.0005616619313258388
+    },
+    {
+      "feature": "telecom_score",
+      "psi": 0.000533087342282478
+    },
+    {
+      "feature": "credit_query_times",
+      "psi": 0.0004960765509964472
+    },
+    {
+      "feature": "app_duration",
+      "psi": 0.00039193154796189806
+    },
+    {
+      "feature": "income_level",
+      "psi": 0.00037050481733613954
+    },
+    {
+      "feature": "night_activity_ratio",
+      "psi": 0.0003216617915142119
+    },
+    {
+      "feature": "ecomm_risk_score",
+      "psi": 0.0003119695956406379
+    }
+  ],
+  "month": "2026-02",
+  "champion": "model_v2_baseline.pkl"
+}

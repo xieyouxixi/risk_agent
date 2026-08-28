@@ -1,0 +1,58 @@
+{
+  "scenario": "parallel_B",
+  "strategy": "light",
+  "round": 2,
+  "model_file": "model_v213_parallel_B_light_r2.pkl",
+  "candidates": [
+    {
+      "name": "xgb",
+      "train_ks": 0.6832434541340283,
+      "va_ks": 0.703548041814536,
+      "oot_ks": 0.7270079067831877,
+      "oot_auc": 0.936639050038397,
+      "train_seconds": 2.176082134246826,
+      "overfit_gap": -0.02030458768050769,
+      "drift_adapt_gap": -0.02345986496865171,
+      "score": 0.96841521616508,
+      "gate_pass": true
+    },
+    {
+      "name": "lgb",
+      "train_ks": 0.7230237686336067,
+      "va_ks": 0.7457736604270541,
+      "oot_ks": 0.7647045574475205,
+      "oot_auc": 0.9498166756760236,
+      "train_seconds": 1.993360996246338,
+      "overfit_gap": -0.02274989179344733,
+      "drift_adapt_gap": -0.018930897020466464,
+      "score": 1.0,
+      "gate_pass": true
+    },
+    {
+      "name": "lr",
+      "train_ks": 0.6845658150586106,
+      "va_ks": 0.7114142196269725,
+      "oot_ks": 0.724524434662857,
+      "oot_auc": 0.935469006739857,
+      "train_seconds": 0.25925469398498535,
+      "overfit_gap": -0.026848404568361905,
+      "drift_adapt_gap": -0.013110215035884498,
+      "score": 0.9661754735372039,
+      "gate_pass": true
+    }
+  ],
+  "selected": {
+    "algo": "lgb",
+    "oot_ks": 0.7647045574475205,
+    "oot_auc": 0.9498166756760236,
+    "overfit_gap": -0.02274989179344733,
+    "gate_pass": true
+  },
+  "incremental": true,
+  "inc_pool_n": 121000,
+  "mature_months": [
+    "2026-02"
+  ],
+  "eval_month": "2026-03",
+  "champion_at_start": "model_v2_baseline.pkl"
+}

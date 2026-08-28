@@ -1,0 +1,228 @@
+{
+  "scenario": "parallel_B",
+  "round": 3,
+  "layer1": {
+    "坏账率变化": {
+      "value_pp": -0.11999999999999997,
+      "level": "LOW"
+    },
+    "客群结构偏移": {
+      "value": 0.24582842055634133,
+      "detail": {
+        "age": 0.24582842055634133,
+        "city_tier": 0.09650000000000003,
+        "loan_amount_request": 0.00830000000000003,
+        "repayment_period": 0.006073333333333389
+      },
+      "level": "MEDIUM"
+    },
+    "KS衰减": {
+      "value": -0.04956733677519336,
+      "level": "LOW"
+    },
+    "AUC衰减": {
+      "value": -0.009313745572986696,
+      "level": "LOW"
+    },
+    "过拟合与泄漏": {
+      "ks_gap": 0,
+      "baseline_auc": 0.9411,
+      "level": "LOW",
+      "note": "已剔除强特征，31特征；仅当 OOT gap>0.15 才告警"
+    }
+  },
+  "layer2": {
+    "IV衰减": {
+      "max_delta_iv": 0.0,
+      "raw_max_delta_iv": 0.10096013684334093,
+      "noise_floor": 0.11641674507498231,
+      "top5": [
+        [
+          "reg_to_apply_days",
+          0.10096013684334093
+        ],
+        [
+          "judicial_risk_score",
+          0.07248368398340976
+        ],
+        [
+          "overdue_history",
+          0.07067750242711168
+        ],
+        [
+          "multi_loan_count",
+          0.058698203843202235
+        ],
+        [
+          "credit_query_times",
+          0.05623774341048743
+        ]
+      ],
+      "level": "LOW"
+    },
+    "重要性偏移": {
+      "value": 0.0028095733610822154,
+      "raw": 0.09573361082206036,
+      "noise_floor": 0.09292403746097815,
+      "level": "LOW"
+    },
+    "群体性PSI": {
+      "value": 0.0,
+      "level": "LOW"
+    },
+    "单点PSI": {
+      "value": 0.06723438569675153,
+      "top_feature": "income_level",
+      "level": "LOW"
+    },
+    "缺失与越界": {
+      "max_missing": 0.0,
+      "missing_feat_count": 0,
+      "violation_cells": 0,
+      "level": "LOW"
+    }
+  },
+  "verdict": {
+    "drift_type": "无显著漂移：一切正常",
+    "high_items": [],
+    "medium_items": [
+      "客群结构偏移"
+    ],
+    "strategy": "light",
+    "strategy_force_last": "light"
+  },
+  "llm_analysis": {
+    "status": "success",
+    "model": "deepseek-v4-flash",
+    "trace": {
+      "trace_id": "m3-parallel_B-r3-20260825T132529",
+      "timestamp": "2026-08-25T13:25:29+08:00",
+      "prompt_version": "m3-v2.1-demo-strategy-v5-expert",
+      "thinking_mode": "enabled",
+      "scenario": "parallel_B",
+      "round": 3
+    },
+    "dimension_analysis": {
+      "data": {
+        "status": "NORMAL",
+        "conclusion": "数据质量正常，缺失率和越界均为0，无数据质量问题",
+        "basis": "缺失率0、缺失特征数0、越界单元格0，DQ规则全部LOW",
+        "confidence": 0.95,
+        "evidence_refs": [
+          "layer2.缺失与越界"
+        ]
+      },
+      "feature": {
+        "status": "MEDIUM",
+        "conclusion": "客群结构偏移达到MEDIUM，主要表现为age和city_tier分布变化，单点PSI及群体性PSI仍较低",
+        "basis": "layer1客群结构偏移level=MEDIUM，value=0.2458，其中age偏移0.2458，city_tier偏移0.0965；单点PSI top_feature为income_level但仅0.067（LOW）",
+        "confidence": 0.7,
+        "evidence_refs": [
+          "layer1.客群结构偏移",
+          "layer1.客群结构偏移.detail.age",
+          "layer1.客群结构偏移.detail.city_tier",
+          "layer2.单点PSI"
+        ]
+      },
+      "model": {
+        "status": "NORMAL",
+        "conclusion": "模型区分度较基线提升，无KS/AUC衰减，模型分漂移极低，无过拟合迹象",
+        "basis": "KS从0.7286提升至0.7647（上升4.96%），AUC从0.9411提升至0.9498，ks_drop_rate和auc_drop_rate均为负（提升），score_psi=0.0007（LOW），过拟合gap=0",
+        "confidence": 0.9,
+        "evidence_refs": [
+          "monitor.metrics.KS",
+          "monitor.metrics.AUC",
+          "monitor.metrics.score_psi",
+          "layer1.过拟合与泄漏"
+        ]
+      },
+      "business": {
+        "status": "NORMAL",
+        "conclusion": "坏账率3.88%较基线4%下降0.12pp，业务表现稳定，无恶化趋势",
+        "basis": "bad_rate_delta_pp=-0.12（LOW），坏账率趋势LOW，整体业务指标正常",
+        "confidence": 0.85,
+        "evidence_refs": [
+          "monitor.metrics.bad_rate_delta_pp",
+          "layer1.坏账率变化"
+        ]
+      }
+    },
+    "independent_anomalies": [
+      {
+        "anomaly_id": "A1",
+        "dimension": "feature",
+        "level": "MEDIUM",
+        "conclusion": "客群结构偏移，主因age分布偏移0.2458和city_tier偏移0.0965，导致特征分布出现中等程度漂移",
+        "merged_indicators": [],
+        "evidence_refs": [
+          "layer1.客群结构偏移",
+          "layer1.客群结构偏移.detail.age",
+          "layer1.客群结构偏移.detail.city_tier"
+        ]
+      }
+    ],
+    "anomaly_summary": {
+      "independent_medium_count": 1,
+      "independent_high_count": 0,
+      "duplicate_evidence_merged": true
+    },
+    "primary_root_cause": {
+      "conclusion": "客群结构偏移，主要由age和city_tier分布变化驱动，导致特征分布不稳定",
+      "confidence": 0.7,
+      "evidence_refs": [
+        "layer1.客群结构偏移",
+        "layer1.客群结构偏移.detail.age",
+        "layer1.客群结构偏移.detail.city_tier"
+      ]
+    },
+    "recommendations": [
+      {
+        "action": "加强对年龄和城市层级分布的监控，增加客群细分分析频次",
+        "reason": "客群结构偏移为MEDIUM，可能后续影响模型稳定性",
+        "confidence": 0.7,
+        "evidence_refs": [
+          "layer1.客群结构偏移",
+          "layer1.客群结构偏移.detail.age",
+          "layer1.客群结构偏移.detail.city_tier"
+        ]
+      },
+      {
+        "action": "保持当前模型champion不变，继续观察特征漂移趋势",
+        "reason": "模型KS/AUC提升、模型分漂移极低，业务指标正常，无需立即调整模型",
+        "confidence": 0.85,
+        "evidence_refs": [
+          "monitor.metrics.KS",
+          "monitor.metrics.AUC",
+          "monitor.metrics.score_psi"
+        ]
+      }
+    ],
+    "strategy_recommendation": {
+      "type": "light",
+      "display_name": "light",
+      "reason": "仅存在一个独立特征MEDIUM（客群结构偏移），且模型、业务均正常，符合light策略条件",
+      "confidence": 0.8,
+      "confidence_basis": "证据明确显示单一特征层MEDIUM，且模型和业务指标全部正常，未触发更高等级条件",
+      "triggered_conditions": [
+        "存在一个独立的特征MEDIUM",
+        "模型和业务指标正常"
+      ],
+      "not_triggered_conditions": [
+        "不存在独立HIGH",
+        "不存在两个及以上独立MEDIUM",
+        "模型/业务/标签无MEDIUM"
+      ],
+      "evidence_refs": [
+        "layer1.客群结构偏移",
+        "monitor.metrics.KS",
+        "monitor.metrics.bad_rate_delta_pp"
+      ]
+    },
+    "evidence_gaps": [
+      "缺少客群结构偏移的具体计算方式和阈值定义",
+      "缺少age/city_tier偏移与模型分数漂移之间关系的量化分析",
+      "缺少业务分组（如逾期、地区）的详细数据",
+      "未提供特征PSI与客群结构偏移的关联证据，无法确认是否同一根因"
+    ]
+  }
+}

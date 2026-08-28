@@ -1,0 +1,20 @@
+{
+  "scenario": "test",
+  "n": 20000,
+  "checks": {
+    "missing": {
+      "max_missing_rate": 0.0,
+      "level": "LOW"
+    },
+    "validity": {
+      "violations": {},
+      "violation_rate": 0.0,
+      "level": "LOW"
+    },
+    "uniqueness": {
+      "dup_rate": 0.0,
+      "level": "LOW"
+    }
+  },
+  "overall_level": "LOW"
+}

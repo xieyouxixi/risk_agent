@@ -1,0 +1,154 @@
+{
+  "champion_baseline": "model_v2_baseline.pkl",
+  "champion_final": "model_v210_parallel_D_light_r1.pkl",
+  "candidates": [
+    {
+      "scenario": "oot_2026_01",
+      "round": 1,
+      "strategy": "standard",
+      "model": "model_v204_oot_2026_01_standard_r1.pkl",
+      "champion_at_start": "model_v2_baseline.pkl",
+      "new_KS": 0.6956842105263157,
+      "new_AUC": 0.9212618947368422,
+      "decision_code": "deploy_non_inferior",
+      "final_decision": "全量上线：候选与 champion 非劣（ΔKS=-0.0026，ΔAUC=-0.0009），模型已融合最新数据，完成替换"
+    },
+    {
+      "scenario": "parallel_B",
+      "round": 2,
+      "strategy": "light",
+      "model": "model_v205_parallel_B_light_r2.pkl",
+      "champion_at_start": "model_v2_baseline.pkl",
+      "new_KS": 0.7708748703685504,
+      "new_AUC": 0.9529459874783248,
+      "decision_code": "deploy_significant",
+      "final_decision": "全量上线：候选显著优于 champion（ΔKS=+0.0138，ΔAUC=+0.0040，DeLong p=0.0000），完成替换（旧 champion 归档备回滚）"
+    },
+    {
+      "scenario": "parallel_B",
+      "round": 3,
+      "strategy": "light",
+      "model": "model_v206_parallel_B_light_r3.pkl",
+      "champion_at_start": "model_v205_parallel_B_light_r2.pkl",
+      "new_KS": 0.7794541616793441,
+      "new_AUC": 0.9551802595338301,
+      "decision_code": "deploy_significant",
+      "final_decision": "全量上线：候选显著优于 champion（ΔKS=+0.0128，ΔAUC=+0.0044，DeLong p=0.0000），完成替换（旧 champion 归档备回滚）"
+    },
+    {
+      "scenario": "parallel_C",
+      "round": 1,
+      "strategy": "none",
+      "model": "model_v207_parallel_C_standard_r1.pkl",
+      "champion_at_start": "model_v2_baseline.pkl",
+      "new_KS": 0.7458653713468216,
+      "new_AUC": 0.9367417422421149,
+      "decision_code": "deploy_non_inferior",
+      "final_decision": "全量上线：候选与 champion 非劣（ΔKS=-0.0116，ΔAUC=-0.0090），模型已融合最新数据，完成替换"
+    },
+    {
+      "scenario": "parallel_C",
+      "round": 2,
+      "strategy": "standard",
+      "model": "model_v208_parallel_C_standard_r2.pkl",
+      "champion_at_start": "model_v207_parallel_C_standard_r1.pkl",
+      "new_KS": 0.7678462124753961,
+      "new_AUC": 0.942001809850458,
+      "decision_code": "deploy_non_inferior",
+      "final_decision": "全量上线：候选与 champion 非劣（ΔKS=-0.0059，ΔAUC=-0.0003），模型已融合最新数据，完成替换"
+    },
+    {
+      "scenario": "parallel_C",
+      "round": 3,
+      "strategy": "standard",
+      "model": "model_v209_parallel_C_standard_r3.pkl",
+      "champion_at_start": "model_v208_parallel_C_standard_r2.pkl",
+      "new_KS": 0.7868983294738748,
+      "new_AUC": 0.9444061774366205,
+      "decision_code": "deploy_non_inferior",
+      "final_decision": "全量上线：候选与 champion 非劣（ΔKS=+0.0004，ΔAUC=+0.0001），模型已融合最新数据，完成替换"
+    },
+    {
+      "scenario": "parallel_D",
+      "round": 1,
+      "strategy": "light",
+      "model": "model_v210_parallel_D_light_r1.pkl",
+      "champion_at_start": "model_v2_baseline.pkl",
+      "new_KS": 0.7503413335489669,
+      "new_AUC": 0.9482220072797091,
+      "decision_code": "deploy_significant",
+      "final_decision": "全量上线：候选显著优于 champion（ΔKS=+0.0126，ΔAUC=+0.0042，DeLong p=0.0000），完成替换（旧 champion 归档备回滚）"
+    },
+    {
+      "scenario": "parallel_D",
+      "round": 2,
+      "strategy": "light",
+      "model": "model_v202_parallel_D_light_r2.pkl",
+      "champion_at_start": "model_v201_parallel_D_light_r1.pkl",
+      "new_KS": 0.7726010978818388,
+      "new_AUC": 0.9535285260430997,
+      "decision_code": "deploy_significant",
+      "final_decision": "全量上线：候选显著优于 champion（ΔKS=+0.0103，ΔAUC=+0.0037，DeLong p=0.0000），完成替换（旧 champion 归档备回滚）"
+    },
+    {
+      "scenario": "parallel_D",
+      "round": 3,
+      "strategy": "major",
+      "model": "model_v203_parallel_D_major_r3.pkl",
+      "champion_at_start": "model_v202_parallel_D_light_r2.pkl",
+      "new_KS": 0.7619001162846766,
+      "new_AUC": 0.9407027765910088,
+      "decision_code": "deploy_non_inferior",
+      "final_decision": "全量上线：候选与 champion 非劣（ΔKS=-0.0243，ΔAUC=-0.0085），模型已融合最新数据，完成替换"
+    }
+  ],
+  "replaced": [
+    {
+      "scenario": "parallel_B",
+      "round": 2,
+      "strategy": "light",
+      "model": "model_v205_parallel_B_light_r2.pkl",
+      "champion_at_start": "model_v2_baseline.pkl",
+      "new_KS": 0.7708748703685504,
+      "new_AUC": 0.9529459874783248,
+      "decision_code": "deploy_significant",
+      "final_decision": "全量上线：候选显著优于 champion（ΔKS=+0.0138，ΔAUC=+0.0040，DeLong p=0.0000），完成替换（旧 champion 归档备回滚）"
+    },
+    {
+      "scenario": "parallel_B",
+      "round": 3,
+      "strategy": "light",
+      "model": "model_v206_parallel_B_light_r3.pkl",
+      "champion_at_start": "model_v205_parallel_B_light_r2.pkl",
+      "new_KS": 0.7794541616793441,
+      "new_AUC": 0.9551802595338301,
+      "decision_code": "deploy_significant",
+      "final_decision": "全量上线：候选显著优于 champion（ΔKS=+0.0128，ΔAUC=+0.0044，DeLong p=0.0000），完成替换（旧 champion 归档备回滚）"
+    },
+    {
+      "scenario": "parallel_D",
+      "round": 1,
+      "strategy": "light",
+      "model": "model_v210_parallel_D_light_r1.pkl",
+      "champion_at_start": "model_v2_baseline.pkl",
+      "new_KS": 0.7503413335489669,
+      "new_AUC": 0.9482220072797091,
+      "decision_code": "deploy_significant",
+      "final_decision": "全量上线：候选显著优于 champion（ΔKS=+0.0126，ΔAUC=+0.0042，DeLong p=0.0000），完成替换（旧 champion 归档备回滚）"
+    },
+    {
+      "scenario": "parallel_D",
+      "round": 2,
+      "strategy": "light",
+      "model": "model_v202_parallel_D_light_r2.pkl",
+      "champion_at_start": "model_v201_parallel_D_light_r1.pkl",
+      "new_KS": 0.7726010978818388,
+      "new_AUC": 0.9535285260430997,
+      "decision_code": "deploy_significant",
+      "final_decision": "全量上线：候选显著优于 champion（ΔKS=+0.0103，ΔAUC=+0.0037，DeLong p=0.0000），完成替换（旧 champion 归档备回滚）"
+    }
+  ],
+  "archived": [],
+  "rolled_back": [],
+  "note": "V3: 1 OOT + 4 scenarios; light/standard/major; deploy V1 flow L1->L2->Full"
+}

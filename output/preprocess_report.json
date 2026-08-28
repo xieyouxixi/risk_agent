@@ -1,0 +1,70 @@
+{
+  "steps": [
+    {
+      "step": "缺失值校验",
+      "detail": "34特征零缺失（max_missing_rate=0.0000）",
+      "status": "pass"
+    },
+    {
+      "step": "异常值截断",
+      "detail": "越界值截断 0 处",
+      "status": "pass"
+    },
+    {
+      "step": "共线性剔除",
+      "detail": "剔除 1 个共线特征",
+      "status": "fixed"
+    },
+    {
+      "step": "强特征剔除",
+      "detail": "剔除 2 个强规则型特征（单特征AUC>0.80）",
+      "status": "fixed"
+    }
+  ],
+  "features_before": 34,
+  "features_after": 31,
+  "dropped_strong": [
+    "login_fail_count",
+    "max_overdue_days"
+  ],
+  "dropped_collinear": [
+    {
+      "pair": "consumption_level~income_level",
+      "corr": 0.803,
+      "dropped": "consumption_level"
+    }
+  ],
+  "final_features": [
+    "credit_query_times",
+    "multi_loan_count",
+    "overdue_history",
+    "credit_utilization",
+    "credit_length_months",
+    "social_score",
+    "telecom_score",
+    "ecomm_risk_score",
+    "judicial_risk_score",
+    "blacklist_hit",
+    "app_duration",
+    "click_frequency",
+    "page_depth",
+    "session_count",
+    "night_activity_ratio",
+    "reg_to_apply_days",
+    "device_risk_score",
+    "ip_change_freq",
+    "gps_anomaly",
+    "device_type",
+    "emulator_flag",
+    "age",
+    "income_level",
+    "education_level",
+    "job_stability",
+    "marital_status",
+    "gender",
+    "city_tier",
+    "debt_income_ratio",
+    "loan_amount_request",
+    "repayment_period"
+  ]
+}

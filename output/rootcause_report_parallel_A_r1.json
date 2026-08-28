@@ -1,0 +1,199 @@
+{
+  "scenario": "parallel_A",
+  "round": 1,
+  "layer1": {
+    "坏账率变化": {
+      "value_pp": -0.01999999999999988,
+      "level": "LOW"
+    },
+    "客群结构偏移": {
+      "value": 0.0220866666666667,
+      "detail": {
+        "age": 0.0220866666666667,
+        "city_tier": 0.013246666666666629,
+        "loan_amount_request": 0.009500000000000008,
+        "repayment_period": 0.006173333333333364
+      },
+      "level": "LOW"
+    },
+    "KS衰减": {
+      "value": -0.02580188295821727,
+      "level": "LOW"
+    },
+    "AUC衰减": {
+      "value": -0.007445869973738463,
+      "level": "LOW"
+    },
+    "过拟合与泄漏": {
+      "ks_gap": 0,
+      "baseline_auc": 0.9372,
+      "level": "LOW",
+      "note": "已剔除强特征，31特征；仅当 OOT gap>0.15 才告警"
+    }
+  },
+  "layer2": {
+    "IV衰减": {
+      "max_delta_iv": 0.0,
+      "raw_max_delta_iv": 0.09934645344837478,
+      "noise_floor": 0.11641674507498231,
+      "top5": [
+        [
+          "reg_to_apply_days",
+          0.09934645344837478
+        ],
+        [
+          "overdue_history",
+          0.08670012237816738
+        ],
+        [
+          "judicial_risk_score",
+          0.03821454452101608
+        ],
+        [
+          "credit_query_times",
+          0.037883293872743834
+        ],
+        [
+          "telecom_score",
+          0.02934532692782038
+        ]
+      ],
+      "level": "LOW"
+    },
+    "重要性偏移": {
+      "value": 0.0,
+      "raw": 0.06659729448491154,
+      "noise_floor": 0.09292403746097815,
+      "level": "LOW"
+    },
+    "群体性PSI": {
+      "value": 0.0,
+      "level": "LOW"
+    },
+    "单点PSI": {
+      "value": 0.000981360736535511,
+      "top_feature": "age",
+      "level": "LOW"
+    },
+    "缺失与越界": {
+      "max_missing": 0.0,
+      "missing_feat_count": 0,
+      "violation_cells": 0,
+      "level": "LOW"
+    }
+  },
+  "verdict": {
+    "drift_type": "无显著漂移：一切正常",
+    "high_items": [],
+    "medium_items": [],
+    "strategy": "none"
+  },
+  "llm_analysis": {
+    "status": "success",
+    "model": "deepseek-v4-flash",
+    "trace": {
+      "trace_id": "m3-parallel_A-r1-20260825T133634",
+      "timestamp": "2026-08-25T13:36:34+08:00",
+      "prompt_version": "m3-v2.1-demo-strategy-v5-expert",
+      "thinking_mode": "enabled",
+      "scenario": "parallel_A",
+      "round": 1
+    },
+    "dimension_analysis": {
+      "data": {
+        "status": "NORMAL",
+        "conclusion": "数据质量良好，缺失率和越界均为0，无需修复数据问题",
+        "basis": "最大缺失率0、缺失特征数0、越界单元格0，DQ规则全部LOW",
+        "confidence": 0.99,
+        "evidence_refs": [
+          "layer2.缺失与越界"
+        ]
+      },
+      "feature": {
+        "status": "NORMAL",
+        "conclusion": "特征分布稳定，不存在显著单点或群体性漂移，IV衰减在噪声底限内",
+        "basis": "最大特征PSI=0.00098，群体性PSI=0，IV衰减噪声调整后为0，重要性偏移低于噪声底限",
+        "confidence": 0.98,
+        "evidence_refs": [
+          "layer2.单点PSI",
+          "layer2.群体性PSI",
+          "layer2.IV衰减",
+          "layer2.重要性偏移"
+        ]
+      },
+      "model": {
+        "status": "NORMAL",
+        "conclusion": "模型区分度稳定且略有提升，无过拟合泄漏告警，分数分布无漂移",
+        "basis": "KS由0.719升至0.738，AUC由0.937升至0.944，KS/AUC下降率为负，score_PSI=0.00051，过拟合gap=0",
+        "confidence": 0.97,
+        "evidence_refs": [
+          "layer1.过拟合与泄漏"
+        ]
+      },
+      "business": {
+        "status": "NORMAL",
+        "conclusion": "业务客群与坏账表现稳定，未出现标签分布或客群结构显著偏移",
+        "basis": "坏账率4.00%降至3.98%，变化-0.02pp为LOW；客群结构偏移2.21%为LOW",
+        "confidence": 0.95,
+        "evidence_refs": [
+          "layer1.坏账率变化",
+          "layer1.客群结构偏移"
+        ]
+      }
+    },
+    "independent_anomalies": [],
+    "anomaly_summary": {
+      "independent_medium_count": 0,
+      "independent_high_count": 0,
+      "duplicate_evidence_merged": true
+    },
+    "primary_root_cause": {
+      "conclusion": "无显著异常根因；当前模型、特征和业务均在正常波动范围内",
+      "confidence": 0.9,
+      "evidence_refs": [
+        "layer2.单点PSI",
+        "layer1.KS衰减"
+      ]
+    },
+    "recommendations": [
+      {
+        "action": "维持现有模型和监控频率，暂不进行增量训练或全量重训",
+        "reason": "所有监测指标均为LOW，且整体监控等级为LOW，模型区分度稳定",
+        "confidence": 0.97,
+        "evidence_refs": [
+          "monitor.overall_level"
+        ]
+      },
+      {
+        "action": "继续按月跟踪特征PSI和坏账率趋势，重点关注age、session_count等TOP特征的轻微波动",
+        "reason": "虽然当前均为LOW，但TOP特征PSI和客群结构偏移存在非零信号，属于常规监控项",
+        "confidence": 0.85,
+        "evidence_refs": [
+          "layer1.客群结构偏移"
+        ]
+      }
+    ],
+    "strategy_recommendation": {
+      "type": "none",
+      "display_name": "none",
+      "reason": "四维均无独立MEDIUM/HIGH异常，全部规则LOW，无需采取模型调整或数据修复动作",
+      "confidence": 0.96,
+      "confidence_basis": "所有规则等级均为LOW，fired_rules为空，overall_level=LOW，PSI均远低于阈值，KS/AUC不降反升，坏账率变化可忽略",
+      "triggered_conditions": [
+        "不存在独立 MEDIUM 或 HIGH 异常",
+        "所有监控指标与规则等级均为 LOW；fired_rules 为空",
+        "数据质量无缺失/越界问题，无需先修复数据"
+      ],
+      "not_triggered_conditions": [
+        "light（未触发）：不存在独立数据/特征 MEDIUM，也不存在单点特征漂移",
+        "standard（未触发）：不存在独立 HIGH，不存在两个及以上独立 MEDIUM，模型/业务/标签均无 MEDIUM",
+        "major（未触发）：不存在两个及以上独立 HIGH，也不存在特征/数据 HIGH 伴随模型/业务独立 HIGH"
+      ],
+      "evidence_refs": [
+        "monitor.overall_level",
+        "monitor.fired_rules"
+      ]
+    },
+    "evidence_gaps": []
+  }
+}

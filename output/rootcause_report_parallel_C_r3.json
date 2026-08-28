@@ -1,0 +1,246 @@
+{
+  "scenario": "parallel_C",
+  "round": 3,
+  "layer1": {
+    "坏账率变化": {
+      "value_pp": 1.3199999999999996,
+      "level": "MEDIUM"
+    },
+    "客群结构偏移": {
+      "value": 0.013346666666666618,
+      "detail": {
+        "age": 0.008926666666666666,
+        "city_tier": 0.013346666666666618,
+        "loan_amount_request": 0.00830000000000003,
+        "repayment_period": 0.006073333333333389
+      },
+      "level": "LOW"
+    },
+    "KS衰减": {
+      "value": -0.0863644600704254,
+      "level": "LOW"
+    },
+    "AUC衰减": {
+      "value": -0.005340734151709627,
+      "level": "LOW"
+    },
+    "过拟合与泄漏": {
+      "ks_gap": 0,
+      "baseline_auc": 0.9393,
+      "level": "LOW",
+      "note": "已剔除强特征，31特征；仅当 OOT gap>0.15 才告警"
+    }
+  },
+  "layer2": {
+    "IV衰减": {
+      "max_delta_iv": 0.0,
+      "raw_max_delta_iv": 0.030453515877823967,
+      "noise_floor": 0.11641674507498231,
+      "top5": [
+        [
+          "judicial_risk_score",
+          0.030453515877823967
+        ],
+        [
+          "age",
+          0.024266513611632873
+        ],
+        [
+          "credit_length_months",
+          0.021657969832666782
+        ],
+        [
+          "telecom_score",
+          0.014795133625661372
+        ],
+        [
+          "reg_to_apply_days",
+          0.013965156286210423
+        ]
+      ],
+      "level": "LOW"
+    },
+    "重要性偏移": {
+      "value": 0.0,
+      "raw": 0.07908428720083246,
+      "noise_floor": 0.09292403746097815,
+      "level": "LOW"
+    },
+    "群体性PSI": {
+      "value": 0.0,
+      "level": "LOW"
+    },
+    "单点PSI": {
+      "value": 0.0007944571184379451,
+      "top_feature": "income_level",
+      "level": "LOW"
+    },
+    "缺失与越界": {
+      "max_missing": 0.0,
+      "missing_feat_count": 0,
+      "violation_cells": 0,
+      "level": "LOW"
+    }
+  },
+  "verdict": {
+    "drift_type": "标签漂移（P(y) 变，P(X) 不变）：同类客群真实违约水平变化",
+    "high_items": [],
+    "medium_items": [
+      "坏账率变化"
+    ],
+    "strategy": "standard",
+    "strategy_force_last": "standard"
+  },
+  "llm_analysis": {
+    "status": "success",
+    "model": "deepseek-v4-flash",
+    "trace": {
+      "trace_id": "m3-parallel_C-r3-20260825T132841",
+      "timestamp": "2026-08-25T13:28:41+08:00",
+      "prompt_version": "m3-v2.1-demo-strategy-v5-expert",
+      "thinking_mode": "enabled",
+      "scenario": "parallel_C",
+      "round": 3
+    },
+    "dimension_analysis": {
+      "data": {
+        "status": "NORMAL",
+        "conclusion": "数据质量正常，无缺失、无越界，未发现数据质量故障。",
+        "basis": "max_missing_rate=0.0，missing_feat_count=0，violation_cells=0，缺失与越界规则为LOW。",
+        "confidence": 0.95,
+        "evidence_refs": [
+          "monitor.metrics.max_missing_rate",
+          "monitor.metrics.missing_feat_count",
+          "layer2.缺失与越界"
+        ]
+      },
+      "feature": {
+        "status": "NORMAL",
+        "conclusion": "特征漂移整体处于LOW水平，未见单点、群体或重要性偏移。",
+        "basis": "max_feat_psi=0.000794，group_psi_ratio=0.0，单点PSI=LOW，IV衰减与重要性偏移均低于噪声底，客群结构偏移LOW。",
+        "confidence": 0.9,
+        "evidence_refs": [
+          "monitor.metrics.max_feat_psi",
+          "layer2.单点PSI",
+          "layer2.群体性PSI",
+          "layer2.IV衰减",
+          "layer2.重要性偏移",
+          "layer1.客群结构偏移"
+        ]
+      },
+      "model": {
+        "status": "NORMAL",
+        "conclusion": "模型判别力和稳定性正常，KS/AUC较基线提升，模型分PSI极低，无过拟合迹象。",
+        "basis": "KS=0.7865>0.7240，AUC=0.9443>0.9393，ks_drop_rate和auc_drop率为负（提升），score_psi=0.000298，过拟合gap=0。",
+        "confidence": 0.92,
+        "evidence_refs": [
+          "monitor.metrics.KS",
+          "monitor.metrics.AUC",
+          "monitor.metrics.ks_drop_rate",
+          "monitor.metrics.auc_drop_rate",
+          "monitor.metrics.score_psi",
+          "layer1.过拟合与泄漏"
+        ]
+      },
+      "business": {
+        "status": "MEDIUM",
+        "conclusion": "坏账率显著上升，触发中等告警；客群结构偏移LOW，业务端存在明显风险变化。",
+        "basis": "bad_rate=0.0532 vs 基线0.04，bad_rate_delta_pp=1.32，R6/R7均为MEDIUM。",
+        "confidence": 0.85,
+        "evidence_refs": [
+          "monitor.metrics.bad_rate",
+          "monitor.metrics.bad_rate_delta_pp",
+          "monitor.rules.R6_坏账率变化pp",
+          "monitor.rules.R7_坏账率趋势",
+          "layer1.坏账率变化"
+        ]
+      }
+    },
+    "independent_anomalies": [
+      {
+        "anomaly_id": "A1",
+        "dimension": "business",
+        "level": "MEDIUM",
+        "conclusion": "坏账率上升1.32个百分点，由4.0%升至5.32%，触发R6和R7规则，为当前唯一独立业务异常。",
+        "merged_indicators": [
+          "monitor.rules.R6_坏账率变化pp",
+          "monitor.rules.R7_坏账率趋势",
+          "layer1.坏账率变化",
+          "monitor.metrics.bad_rate_delta_pp"
+        ],
+        "evidence_refs": [
+          "monitor.metrics.bad_rate_delta_pp",
+          "monitor.rules.R6_坏账率变化pp",
+          "monitor.rules.R7_坏账率趋势",
+          "layer1.坏账率变化"
+        ]
+      }
+    ],
+    "anomaly_summary": {
+      "independent_medium_count": 1,
+      "independent_high_count": 0,
+      "duplicate_evidence_merged": true
+    },
+    "primary_root_cause": {
+      "conclusion": "当前首要根因是业务坏账率显著上升（+1.32pp），但在证据中未观察到客群偏移、特征漂移或模型衰减，因此根因可能来自业务端风险水平变化（如客群质量、外部环境、审批策略等），需进一步业务归因。",
+      "confidence": 0.6,
+      "evidence_refs": [
+        "monitor.metrics.bad_rate_delta_pp",
+        "layer1.坏账率变化",
+        "monitor.rules.R6_坏账率变化pp"
+      ]
+    },
+    "recommendations": [
+      {
+        "action": "启动坏账率专项归因分析，按客群、渠道、期限、审批策略等维度拆解坏账来源。",
+        "reason": "坏账率上升1.32pp为唯一告警，但客群偏移LOW，需人工定位业务端真实原因。",
+        "confidence": 0.65,
+        "evidence_refs": [
+          "monitor.metrics.bad_rate_delta_pp",
+          "layer1.坏账率变化",
+          "monitor.rules.R7_坏账率趋势"
+        ]
+      },
+      {
+        "action": "按标准策略执行增量训练或重新校准，使模型适应当前业务风险水平。",
+        "reason": "业务MEDIUM触发standard策略，虽模型判别力仍正常，但坏账率上升提示评分卡需要适配。",
+        "confidence": 0.7,
+        "evidence_refs": [
+          "monitor.overall_level",
+          "monitor.rules.R6_坏账率变化pp",
+          "monitor.rules.R7_坏账率趋势"
+        ]
+      }
+    ],
+    "strategy_recommendation": {
+      "type": "standard",
+      "display_name": "standard",
+      "reason": "存在一个独立业务MEDIUM（坏账率上升），无HIGH，符合standard触发条件；light不适用因业务异常，major不适用因无HIGH。",
+      "confidence": 0.75,
+      "confidence_basis": "策略规则明确：业务MEDIUM即触发standard；且其余维度均NORMAL，不存在更高等级条件。",
+      "triggered_conditions": [
+        "业务坏账率MEDIUM（R6/R7）",
+        "独立MEDIUM数量=1",
+        "模型和特征维度均NORMAL"
+      ],
+      "not_triggered_conditions": [
+        "不存在独立HIGH，未触发major",
+        "不存在数据/特征MEDIUM，未触发light（且业务异常时light不适用）",
+        "存在独立MEDIUM，未触发none"
+      ],
+      "evidence_refs": [
+        "monitor.metrics.bad_rate_delta_pp",
+        "monitor.rules.R6_坏账率变化pp",
+        "monitor.rules.R7_坏账率趋势",
+        "monitor.overall_level"
+      ]
+    },
+    "evidence_gaps": [
+      "缺少坏账率按客群、期限、渠道的细分数据",
+      "缺少业务结构变化（如通过率、放款量）佐证",
+      "缺少模型分与坏账率交叉分布",
+      "缺少外部宏观或行业指标",
+      "仅有一个月数据，无法判断坏账率趋势是否持续"
+    ]
+  }
+}

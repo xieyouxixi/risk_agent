@@ -1,0 +1,107 @@
+{
+  "scenario": "parallel_A",
+  "phase": "with_label",
+  "n": 20000,
+  "metrics": {
+    "KS": 0.7610541591052421,
+    "AUC": 0.949681468289209,
+    "bad_rate": 0.0388,
+    "score_psi": 0.00035633708194582613,
+    "max_feat_psi": 0.0007944571184379451,
+    "group_psi_ratio": 0.0,
+    "ks_drop_rate": -0.05817295964114877,
+    "auc_drop_rate": -0.013287189281229428,
+    "bad_rate_delta_pp": -0.11999999999999997,
+    "max_missing_rate": 0.0,
+    "missing_feat_count": 0
+  },
+  "baseline": {
+    "KS": 0.7192152777777778,
+    "AUC": 0.937228337962963,
+    "bad_rate": 0.04
+  },
+  "rules": {
+    "R1_KS下降率": {
+      "value": -0.05817295964114877,
+      "level": "LOW"
+    },
+    "R2_AUC下降率": {
+      "value": -0.013287189281229428,
+      "level": "LOW"
+    },
+    "R3_最大特征PSI": {
+      "value": 0.0007944571184379451,
+      "level": "LOW"
+    },
+    "R4_群体漂移占比": {
+      "value": 0.0,
+      "level": "LOW"
+    },
+    "R5_模型分PSI": {
+      "value": 0.00035633708194582613,
+      "level": "LOW"
+    },
+    "R6_坏账率变化pp": {
+      "value": -0.11999999999999997,
+      "level": "LOW"
+    },
+    "R7_坏账率趋势": {
+      "value": -0.11999999999999997,
+      "level": "LOW"
+    },
+    "DQ_缺失率": {
+      "value": 0.0,
+      "level": "LOW"
+    },
+    "DQ_缺失特征数": {
+      "value": 0,
+      "level": "LOW"
+    }
+  },
+  "overall_level": "LOW",
+  "fired_rules": [],
+  "feature_psi_top10": [
+    {
+      "feature": "income_level",
+      "psi": 0.0007944571184379451
+    },
+    {
+      "feature": "credit_utilization",
+      "psi": 0.0004916327012583301
+    },
+    {
+      "feature": "device_risk_score",
+      "psi": 0.00047504855843929627
+    },
+    {
+      "feature": "debt_income_ratio",
+      "psi": 0.00042234808590188534
+    },
+    {
+      "feature": "ip_change_freq",
+      "psi": 0.00042079199620625877
+    },
+    {
+      "feature": "night_activity_ratio",
+      "psi": 0.00041432345423194196
+    },
+    {
+      "feature": "credit_query_times",
+      "psi": 0.00038382693253014976
+    },
+    {
+      "feature": "ecomm_risk_score",
+      "psi": 0.0003717727909076864
+    },
+    {
+      "feature": "telecom_score",
+      "psi": 0.0003696752532425227
+    },
+    {
+      "feature": "app_duration",
+      "psi": 0.00035978724139886957
+    }
+  ],
+  "month": "2026-03",
+  "champion": "model_v2_baseline.pkl"
+}

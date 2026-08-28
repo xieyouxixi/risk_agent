@@ -1,0 +1,356 @@
+{
+  "trace": {
+    "trace_id": "m3-oot_2026_01-r1-20260825T131952",
+    "timestamp": "2026-08-25T13:19:52+08:00",
+    "prompt_version": "m3-v2.1-demo-strategy-v5-expert",
+    "thinking_mode": "enabled",
+    "scenario": "oot_2026_01",
+    "round": 1
+  },
+  "status": "success",
+  "evidence": {
+    "monitor": {
+      "scenario": "oot_2026_01",
+      "phase": "with_label",
+      "n": 20000,
+      "metrics": {
+        "KS": 0.6982631578947368,
+        "AUC": 0.9221856842105264,
+        "bad_rate": 0.05,
+        "score_psi": 0.001185758227258076,
+        "max_feat_psi": 0.0010926511965836472,
+        "group_psi_ratio": 0.0,
+        "ks_drop_rate": 0.02913191714694745,
+        "auc_drop_rate": 0.016050148232960363,
+        "bad_rate_delta_pp": 1.0000000000000002,
+        "max_missing_rate": 0.0,
+        "missing_feat_count": 0
+      },
+      "baseline": {
+        "KS": 0.7192152777777778,
+        "AUC": 0.937228337962963,
+        "bad_rate": 0.04
+      },
+      "rules": {
+        "R1_KS下降率": {
+          "value": 0.02913191714694745,
+          "level": "LOW"
+        },
+        "R2_AUC下降率": {
+          "value": 0.016050148232960363,
+          "level": "LOW"
+        },
+        "R3_最大特征PSI": {
+          "value": 0.0010926511965836472,
+          "level": "LOW"
+        },
+        "R4_群体漂移占比": {
+          "value": 0.0,
+          "level": "LOW"
+        },
+        "R5_模型分PSI": {
+          "value": 0.001185758227258076,
+          "level": "LOW"
+        },
+        "R6_坏账率变化pp": {
+          "value": 1.0000000000000002,
+          "level": "MEDIUM"
+        },
+        "R7_坏账率趋势": {
+          "value": 1.0000000000000002,
+          "level": "MEDIUM"
+        },
+        "DQ_缺失率": {
+          "value": 0.0,
+          "level": "LOW"
+        },
+        "DQ_缺失特征数": {
+          "value": 0,
+          "level": "LOW"
+        }
+      },
+      "overall_level": "MEDIUM",
+      "fired_rules": [
+        "R6_坏账率变化pp",
+        "R7_坏账率趋势"
+      ],
+      "feature_psi_top10": [
+        {
+          "feature": "job_stability",
+          "psi": 0.0010926511965836472
+        },
+        {
+          "feature": "social_score",
+          "psi": 0.0008151995005901263
+        },
+        {
+          "feature": "credit_query_times",
+          "psi": 0.0007758218814816326
+        },
+        {
+          "feature": "ip_change_freq",
+          "psi": 0.0007512827059102411
+        },
+        {
+          "feature": "app_duration",
+          "psi": 0.0007253986100789185
+        },
+        {
+          "feature": "income_level",
+          "psi": 0.0007056686072815984
+        },
+        {
+          "feature": "telecom_score",
+          "psi": 0.0006903531353267873
+        },
+        {
+          "feature": "judicial_risk_score",
+          "psi": 0.0006721976439413735
+        },
+        {
+          "feature": "age",
+          "psi": 0.0006489298903790196
+        },
+        {
+          "feature": "click_frequency",
+          "psi": 0.0005876318970241274
+        }
+      ],
+      "month": "2026-01",
+      "champion": "model_v2_baseline.pkl"
+    },
+    "layer1": {
+      "坏账率变化": {
+        "value_pp": 1.0000000000000002,
+        "level": "MEDIUM"
+      },
+      "客群结构偏移": {
+        "value": 0.01987999999999998,
+        "detail": {
+          "age": 0.01987999999999998,
+          "city_tier": 0.010493333333333354,
+          "loan_amount_request": 0.010099999999999998,
+          "repayment_period": 0.005173333333333349
+        },
+        "level": "LOW"
+      },
+      "KS衰减": {
+        "value": 0.02913191714694745,
+        "level": "LOW"
+      },
+      "AUC衰减": {
+        "value": 0.016050148232960363,
+        "level": "LOW"
+      },
+      "过拟合与泄漏": {
+        "ks_gap": 0.02095211988304102,
+        "baseline_auc": 0.9372,
+        "level": "LOW",
+        "note": "已剔除强特征，31特征；仅当 OOT gap>0.15 才告警"
+      }
+    },
+    "layer2": {
+      "IV衰减": {
+        "max_delta_iv": 0.0,
+        "raw_max_delta_iv": 0.06258088462429301,
+        "noise_floor": 0.11641674507498231,
+        "top5": [
+          [
+            "overdue_history",
+            0.06258088462429301
+          ],
+          [
+            "reg_to_apply_days",
+            0.05874050978210699
+          ],
+          [
+            "social_score",
+            0.037830356637670204
+          ],
+          [
+            "telecom_score",
+            0.024089548941138017
+          ],
+          [
+            "credit_query_times",
+            0.018643678392940732
+          ]
+        ],
+        "level": "LOW"
+      },
+      "重要性偏移": {
+        "value": 0.0,
+        "raw": 0.0894901144640999,
+        "noise_floor": 0.09292403746097815,
+        "level": "LOW"
+      },
+      "群体性PSI": {
+        "value": 0.0,
+        "level": "LOW"
+      },
+      "单点PSI": {
+        "value": 0.0010926511965836472,
+        "top_feature": "job_stability",
+        "level": "LOW"
+      },
+      "缺失与越界": {
+        "max_missing": 0.0,
+        "missing_feat_count": 0,
+        "violation_cells": 0,
+        "level": "LOW"
+      }
+    }
+  },
+  "structured_output": {
+    "status": "success",
+    "model": "deepseek-v4-flash",
+    "trace": {
+      "trace_id": "m3-oot_2026_01-r1-20260825T131952",
+      "timestamp": "2026-08-25T13:19:52+08:00",
+      "prompt_version": "m3-v2.1-demo-strategy-v5-expert",
+      "thinking_mode": "enabled",
+      "scenario": "oot_2026_01",
+      "round": 1
+    },
+    "dimension_analysis": {
+      "data": {
+        "status": "NORMAL",
+        "conclusion": "数据质量正常，无缺失、无越界",
+        "basis": "缺失率0、缺失特征数0、越界单元格0，所有数据质量规则均LOW",
+        "confidence": 0.98,
+        "evidence_refs": [
+          "monitor.rules.DQ_缺失率",
+          "monitor.rules.DQ_缺失特征数",
+          "layer2.缺失与越界"
+        ]
+      },
+      "feature": {
+        "status": "NORMAL",
+        "conclusion": "特征漂移整体正常，无PSI/IV/重要性等异常",
+        "basis": "最大特征PSI 0.00109、单点PSI LOW、群体性PSI 0、IV衰减LOW、重要性偏移LOW、客群结构偏移LOW",
+        "confidence": 0.95,
+        "evidence_refs": [
+          "monitor.rules.R3_最大特征PSI",
+          "monitor.rules.R4_群体漂移占比",
+          "layer2.单点PSI",
+          "layer2.群体性PSI",
+          "layer2.IV衰减",
+          "layer2.重要性偏移",
+          "layer1.客群结构偏移"
+        ]
+      },
+      "model": {
+        "status": "NORMAL",
+        "conclusion": "模型性能稳定，KS/AUC下降率低，过拟合风险低",
+        "basis": "KS下降率2.9% LOW，AUC下降率1.6% LOW，过拟合gap 0.021 LOW，模型分PSI 0.0012 LOW",
+        "confidence": 0.95,
+        "evidence_refs": [
+          "monitor.rules.R1_KS下降率",
+          "monitor.rules.R2_AUC下降率",
+          "monitor.rules.R5_模型分PSI",
+          "layer1.KS衰减",
+          "layer1.AUC衰减",
+          "layer1.过拟合与泄漏"
+        ]
+      },
+      "business": {
+        "status": "MEDIUM",
+        "conclusion": "坏账率明显上升，触发业务层面MEDIUM",
+        "basis": "坏账率从4%升至5%，变化1pp，R6/R7均MEDIUM，bad_rate_delta_pp=1.0",
+        "confidence": 0.9,
+        "evidence_refs": [
+          "monitor.rules.R6_坏账率变化pp",
+          "monitor.rules.R7_坏账率趋势",
+          "layer1.坏账率变化"
+        ]
+      }
+    },
+    "independent_anomalies": [
+      {
+        "anomaly_id": "A1",
+        "dimension": "business",
+        "level": "MEDIUM",
+        "conclusion": "坏账率上升1个百分点，触发业务维度独立异常",
+        "merged_indicators": [
+          "monitor.rules.R6_坏账率变化pp",
+          "monitor.rules.R7_坏账率趋势",
+          "layer1.坏账率变化",
+          "monitor.metrics.bad_rate_delta_pp"
+        ],
+        "evidence_refs": [
+          "monitor.rules.R6_坏账率变化pp",
+          "monitor.rules.R7_坏账率趋势",
+          "layer1.坏账率变化"
+        ]
+      }
+    ],
+    "anomaly_summary": {
+      "independent_medium_count": 1,
+      "independent_high_count": 0,
+      "duplicate_evidence_merged": true
+    },
+    "primary_root_cause": {
+      "conclusion": "坏账率上升为当前首要异常，但具体驱动因素未明；模型与特征层面均无异常，排除模型区分度下降和特征漂移，可能源于客群质量变化或外部经济环境",
+      "confidence": 0.65,
+      "evidence_refs": [
+        "layer1.坏账率变化",
+        "layer1.客群结构偏移",
+        "monitor.metrics.KS",
+        "monitor.metrics.AUC"
+      ]
+    },
+    "recommendations": [
+      {
+        "action": "监控坏账率趋势，对新增坏客户进行特征画像分析，定位风险上升的客群子群体",
+        "reason": "坏账率明显上升，需识别高波动子群体以制定针对性策略",
+        "confidence": 0.8,
+        "evidence_refs": [
+          "layer1.坏账率变化",
+          "monitor.feature_psi_top10"
+        ]
+      },
+      {
+        "action": "检查审批策略和贷前准入标准近期是否有调整，评估是否引入了更高风险客群",
+        "reason": "模型和特征漂移正常，坏账率上升更可能来自业务策略或客群变化",
+        "confidence": 0.7,
+        "evidence_refs": [
+          "layer1.客群结构偏移"
+        ]
+      },
+      {
+        "action": "持续跟踪模型性能与坏账率，若未来客群结构偏移超过阈值或模型指标下降，再考虑触发增量训练或全量重训",
+        "reason": "当前模型性能稳定，无需立即重训，但需动态监测",
+        "confidence": 0.75,
+        "evidence_refs": [
+          "monitor.rules.R1_KS下降率",
+          "monitor.rules.R2_AUC下降率",
+          "monitor.rules.R5_模型分PSI"
+        ]
+      }
+    ],
+    "strategy_recommendation": {
+      "type": "standard",
+      "display_name": "standard",
+      "reason": "业务维度存在MEDIUM异常（坏账率上升），满足standard触发条件；无HIGH异常且未达到major要求",
+      "confidence": 0.85,
+      "confidence_basis": "坏账率变化规则触发明确，且独立异常数仅1个，规则判定清晰",
+      "triggered_conditions": [
+        "业务维度存在MEDIUM（坏账率变化）"
+      ],
+      "not_triggered_conditions": [
+        "不存在独立HIGH异常",
+        "不存在两个及以上独立MEDIUM",
+        "不存在特征/数据HIGH伴随模型/业务HIGH"
+      ],
+      "evidence_refs": [
+        "monitor.rules.R6_坏账率变化pp",
+        "monitor.rules.R7_坏账率趋势"
+      ]
+    },
+    "evidence_gaps": [
+      "缺乏分客群坏账率数据，无法确认坏账率上升的客群集中点",
+      "缺少业务策略变更日志，无法判断是否因审批规则调整导致客群变化",
+      "仅有单月OOT数据，未见连续月份趋势，难以判断坏账率上升是暂时波动还是持续性恶化"
+    ]
+  }
+}

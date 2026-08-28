@@ -1,0 +1,224 @@
+{
+  "scenario": "parallel_C",
+  "round": 1,
+  "layer1": {
+    "坏账率变化": {
+      "value_pp": 0.45999999999999996,
+      "level": "LOW"
+    },
+    "客群结构偏移": {
+      "value": 0.0220866666666667,
+      "detail": {
+        "age": 0.0220866666666667,
+        "city_tier": 0.013246666666666629,
+        "loan_amount_request": 0.009500000000000008,
+        "repayment_period": 0.006173333333333364
+      },
+      "level": "LOW"
+    },
+    "KS衰减": {
+      "value": -0.05315484430202896,
+      "level": "LOW"
+    },
+    "AUC衰减": {
+      "value": -0.009061434833057542,
+      "level": "LOW"
+    },
+    "过拟合与泄漏": {
+      "ks_gap": 0,
+      "baseline_auc": 0.9372,
+      "level": "LOW",
+      "note": "已剔除强特征，31特征；仅当 OOT gap>0.15 才告警"
+    }
+  },
+  "layer2": {
+    "IV衰减": {
+      "max_delta_iv": 0.0,
+      "raw_max_delta_iv": 0.06654639358748426,
+      "noise_floor": 0.11641674507498231,
+      "top5": [
+        [
+          "credit_query_times",
+          0.06654639358748426
+        ],
+        [
+          "reg_to_apply_days",
+          0.05831226377965004
+        ],
+        [
+          "overdue_history",
+          0.057463397209554956
+        ],
+        [
+          "judicial_risk_score",
+          0.04128111224045883
+        ],
+        [
+          "ecomm_risk_score",
+          0.022356457301814806
+        ]
+      ],
+      "level": "LOW"
+    },
+    "重要性偏移": {
+      "value": 0.0,
+      "raw": 0.0749219562955255,
+      "noise_floor": 0.09292403746097815,
+      "level": "LOW"
+    },
+    "群体性PSI": {
+      "value": 0.0,
+      "level": "LOW"
+    },
+    "单点PSI": {
+      "value": 0.000981360736535511,
+      "top_feature": "age",
+      "level": "LOW"
+    },
+    "缺失与越界": {
+      "max_missing": 0.0,
+      "missing_feat_count": 0,
+      "violation_cells": 0,
+      "level": "LOW"
+    }
+  },
+  "verdict": {
+    "drift_type": "标签漂移（P(y) 变，P(X) 不变）：同类客群真实违约水平变化",
+    "high_items": [],
+    "medium_items": [],
+    "strategy": "none",
+    "strategy_fallback": "standard"
+  },
+  "llm_analysis": {
+    "status": "success",
+    "model": "deepseek-v4-flash",
+    "trace": {
+      "trace_id": "m3-parallel_C-r1-20260825T132639",
+      "timestamp": "2026-08-25T13:26:39+08:00",
+      "prompt_version": "m3-v2.1-demo-strategy-v5-expert",
+      "thinking_mode": "enabled",
+      "scenario": "parallel_C",
+      "round": 1
+    },
+    "dimension_analysis": {
+      "data": {
+        "status": "NORMAL",
+        "conclusion": "数据质量无异常，缺失率、缺失特征数和越界单元格均为0，未触发任何数据质量规则。",
+        "basis": "max_missing_rate=0、missing_feat_count=0、violation_cells=0，DQ规则均为LOW。",
+        "confidence": 0.98,
+        "evidence_refs": [
+          "monitor.metrics.max_missing_rate",
+          "monitor.metrics.missing_feat_count",
+          "monitor.rules.DQ_缺失率",
+          "monitor.rules.DQ_缺失特征数",
+          "layer2.缺失与越界.violation_cells"
+        ]
+      },
+      "feature": {
+        "status": "NORMAL",
+        "conclusion": "特征漂移无异常，最大特征PSI、群体性PSI、IV衰减和重要性偏移均处于极低水平。",
+        "basis": "max_feat_psi=0.00098，群体性PSI=0，IV衰减raw<noise_floor，重要性偏移raw<noise_floor。",
+        "confidence": 0.97,
+        "evidence_refs": [
+          "monitor.metrics.max_feat_psi",
+          "monitor.metrics.group_psi_ratio",
+          "layer2.单点PSI.value",
+          "layer2.群体性PSI.value",
+          "layer2.IV衰减.raw_max_delta_iv",
+          "layer2.IV衰减.noise_floor",
+          "layer2.重要性偏移.raw",
+          "layer2.重要性偏移.noise_floor"
+        ]
+      },
+      "model": {
+        "status": "NORMAL",
+        "conclusion": "模型区分度稳定且无衰减，KS、AUC较基线均有提升，模型分PSI极低，无过拟合告警。",
+        "basis": "KS从0.7192提升至0.7574，AUC从0.9372提升至0.9457，ks_gap=0，score_psi=0.00051。",
+        "confidence": 0.96,
+        "evidence_refs": [
+          "monitor.metrics.KS",
+          "monitor.metrics.AUC",
+          "monitor.metrics.ks_drop_rate",
+          "monitor.metrics.auc_drop_rate",
+          "monitor.metrics.score_psi",
+          "layer1.过拟合与泄漏.ks_gap",
+          "monitor.rules.R5_模型分PSI"
+        ]
+      },
+      "business": {
+        "status": "NORMAL",
+        "conclusion": "业务表现正常，坏账率0.46pp上升和客群结构偏移均未触发告警，但绝对变化值得持续观察。",
+        "basis": "坏账率变化0.46pp、坏账率趋势0.46pp均为LOW，客群结构偏移值0.022为LOW。",
+        "confidence": 0.9,
+        "evidence_refs": [
+          "monitor.metrics.bad_rate_delta_pp",
+          "monitor.rules.R6_坏账率变化pp",
+          "monitor.rules.R7_坏账率趋势",
+          "layer1.坏账率变化.value_pp",
+          "layer1.客群结构偏移.value"
+        ]
+      }
+    },
+    "independent_anomalies": [],
+    "anomaly_summary": {
+      "independent_medium_count": 0,
+      "independent_high_count": 0,
+      "duplicate_evidence_merged": true
+    },
+    "primary_root_cause": {
+      "conclusion": "当前不存在需要干预的异常根因，所有监控维度均处于LOW稳定区间。",
+      "confidence": 0.95,
+      "evidence_refs": [
+        "monitor.overall_level",
+        "monitor.fired_rules",
+        "monitor.rules"
+      ]
+    },
+    "recommendations": [
+      {
+        "action": "维持常规月度监控，持续观察PSI、KS、AUC和坏账率变化。",
+        "reason": "所有规则均为LOW且无告警触发，模型与特征表现稳定。",
+        "confidence": 0.95,
+        "evidence_refs": [
+          "monitor.overall_level",
+          "monitor.fired_rules"
+        ]
+      },
+      {
+        "action": "额外跟踪坏账率0.46pp上升是否具备趋势性，并关注age、city_tier等客群结构偏移走势。",
+        "reason": "当前虽为LOW，但坏账率绝对变化为正，且客群结构偏移存在小幅明细差异。",
+        "confidence": 0.75,
+        "evidence_refs": [
+          "monitor.metrics.bad_rate_delta_pp",
+          "layer1.客群结构偏移.detail"
+        ]
+      }
+    ],
+    "strategy_recommendation": {
+      "type": "none",
+      "display_name": "none",
+      "reason": "不存在独立MEDIUM/HIGH异常，所有监控指标和规则均为LOW，无需模型干预。",
+      "confidence": 0.95,
+      "confidence_basis": "Evidence JSON中overall_level=LOW、fired_rules为空，四个维度均NORMAL。",
+      "triggered_conditions": [
+        "不存在独立MEDIUM/HIGH异常",
+        "所有监控规则均为LOW"
+      ],
+      "not_triggered_conditions": [
+        "light条件：存在独立数据/特征MEDIUM或单点特征漂移——未触发",
+        "standard条件：存在非纯数据质量独立HIGH/两个及以上独立MEDIUM/模型业务标签MEDIUM——未触发",
+        "major条件：存在两个及以上独立HIGH，或特征/数据HIGH伴随模型/业务HIGH——未触发"
+      ],
+      "evidence_refs": [
+        "monitor.overall_level",
+        "monitor.fired_rules",
+        "monitor.rules"
+      ]
+    },
+    "evidence_gaps": [
+      "缺少分数段坏账率分布，无法进一步定位0.46pp坏账率上升是否集中于特定客群。",
+      "缺少更长周期的坏账率趋势证据，当前趋势判断仅依赖单期变化。",
+      "缺少特征与坏账的交叉分析证据，客群结构偏移的细分业务影响无法完全排除。"
+    ]
+  }
+}
